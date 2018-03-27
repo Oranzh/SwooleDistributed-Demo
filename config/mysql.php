@@ -14,7 +14,7 @@ $config['mysql']['test']['password'] = '123456';
 $config['mysql']['test']['database'] = 'test';
 $config['mysql']['test']['charset'] = 'utf8';
 
-$config['mysql']['sd']['host'] = 'rm-2zei17qa1cua4f3jco.mysql.rds.aliyuncs.com';
+$config['mysql']['sd']['host'] = 'rm-2zei17qacua4f3jco.mysql.rds.aliyuncs.com';
 $config['mysql']['sd']['port'] = '3306';
 $config['mysql']['sd']['user'] = 'work';
 $config['mysql']['sd']['password'] = 'work@147852';
