@@ -23,32 +23,35 @@ class MyProcess extends Process
     
     public function start($process)
     {
-        $this->redisPool = new RedisAsynPool($this->config, $this->config->get('redis.active'));
+        $this->redis = new RedisAsynPool($this->config, $this->config->get('redis.active'));
         $this->test = new MysqlAsynPool($this->config, 'test');
-        get_instance()->addAsynPool("redisPool",$this->redisPool);
+        get_instance()->addAsynPool("redis",$this->redisPool);
         get_instance()->addAsynPool("test",$this->test);
-
-//        if ($this->test != null) {
-//            $this->installMysqlPool($this->test);
-//        }
     }
 
     public function getData()
     {
-        $this->mysql = get_instance()->getAsynPool("test");
-        var_dump($this->mysql);
-        sleepCoroutine(3000);
-        if( $this->redisPool->getCoroutine()->exists('num') == false) {
-            $this->redisPool->getCoroutine()->set('num',1);
+//        $this->mysql = get_instance()->getAsynPool("test");
+//        var_dump($this->mysql);
+//        sleepCoroutine(3000);
+        $num = $this->redis->getCoroutine()->get('num');
+        secho('redisnum---start',$num);
+        if( $this->redis->getCoroutine()->exists('num') == false) {
+            $this->redis->getCoroutine()->set('num',1);
+        }
+        for ($i = 1 ; $i <= 10 ; $i++) {
+
+            $this->redis->getCoroutine()->incrBy('num',2);
+            secho('['.date('Y-m-d H:i:s').' ] redisnum---',$this->redis->getCoroutine()->get('num'));
         }
 
-        for($i = 0 ; $i < 10 ; $i++) {
-            $data = [
-                'user_name' => 'lee123',
-                'emails' => 'oranzh.cc@gmail.com',
-            ];
-            $this->mysql->insert($this->table)->set($data)->query();
-        }
+//        for($i = 0 ; $i < 10 ; $i++) {
+//            $data = [
+//                'user_name' => 'lee123',
+//                'emails' => 'oranzh.cc@gmail.com',
+//            ];
+//            $this->mysql->insert($this->table)->set($data)->query();
+//        }
 
         return 'myprocess task is done';
     }

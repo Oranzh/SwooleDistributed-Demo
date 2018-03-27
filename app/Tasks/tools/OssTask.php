@@ -40,15 +40,27 @@ class OssTask extends Task
      * @param $object
      * @param $file
      * @return string
-     * @throws \OSS\Core\OssException
      */
     public function uploadFile($object,$file)
     {
+        $object = $this->getObject($object);
         $res = $this->ossClient->uploadFile($this->ossConfig['bucket'], $object,$file);
-        if ($res['info']['http_code'] != 200) {
+        if ($res['info']['http_code'] == 200)  return $this->getUrl($object);
+        return false;
+    }
 
-        }
-        return $this->getUrl($object);
+    /**
+     * @param $object
+     * @param $content raw
+     * @return string
+     */
+    public function uploadFileByContent($object,$content)
+    {
+        $object = $this->getObject($object);
+        $object .= '.png';
+        $res = $this->ossClient->putObject($this->ossConfig['bucket'], $object,$content);
+        if ($res['info']['http_code'] == 200) return $this->getUrl($object);
+        return false;
     }
 
     /**
@@ -68,9 +80,18 @@ class OssTask extends Task
     public function getFile(HttpInput $input)
     {
         $file = $input->getFiles();
-        if ($file['error'] === 0) {
-            return $file['tmp_name'];
-        }
+        if ($file['error'] === 0)   return $file['tmp_name'];
+        return false;
+    }
+
+    /**
+     * @param $object
+     * @return string 返回具体路径
+     */
+    public function getObject($object)
+    {
+        if ($this->ossConfig['ns']) return $this->ossConfig['ns'].'/'.$object;
+        return $object;
     }
 
 }
