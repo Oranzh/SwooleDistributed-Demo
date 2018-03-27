@@ -30,12 +30,11 @@ class AppModel extends  Model
     }
 
     public function mysql() {
-        var_dump($this->sd);
         $data = [
-            'user_name' => 'lee123',
+            'user_name' => 'lee123'.rand(1000,9999),
             'emails' => 'oranzh.cc@gmail.com',
         ];
-        $res = $this->mysql_pool->dbQueryBuilder->insert($this->table)->set($data)->query();
+        $res = $this->sd->dbQueryBuilder->insert($this->table)->set($data)->query();
         return $res->getResult();
     }
 

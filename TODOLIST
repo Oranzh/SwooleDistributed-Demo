@@ -1,0 +1,20 @@
+TODOLIST
+1.自定义进程里如何使用数据库连接池;
+2.consul server如何用2个以上;
+3.Let's Encrypt ssl密码
+4.阿里云负载均衡 前端https 443 -> 后端 http 8080
+
+
+
+2018年3月27日
+验证码思路:调用在线生成验证码服务,用户无需在本地生成验证码,不用去研究难懂的GD2和IMAGICK.
+1.SERVER端.我来实现验证码的生成.
+    技术:阿里云OSS,SWOOLE的TASKWORKER,PHP的IMAGICK扩展
+2.用户端.只需要调用接口,返回验证码图片地址和验证码内容.
+    用户端可以在自己的服务器上保存验证码内容,并将图片展示到前端,根据前端传的验证码内容和服务器存的验证码匹配.
+    或者可以传到SERVER端匹配,且得到结果.
+
+Let's Encrypt ssl加密
+Apache加密成功,云笔nginx无法加密.正常安装nginx可以加密.
+    问题 swoole如何使用ssl加密
+

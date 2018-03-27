@@ -91,9 +91,6 @@ class AppController extends Controller
 
 
     public function http_redisNum() {
-        //$this->redis->getCoroutine()->set('test', 'testRedis');
-        $res = $this->redis->getCoroutine()->get('num');
-        secho('redisnum----',$res);
         $this->redis->getCoroutine()->incr('num');
         $res = $this->redis->getCoroutine()->get('num');
         $this->http_output->end($res);
