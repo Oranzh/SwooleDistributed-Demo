@@ -36,7 +36,7 @@ class AppController extends Controller
         parent::__construct($proxy);
         $this->redis = get_instance()->getAsynPool("redisPool");
         $this->mysql = get_instance()->getAsynPool("mysqlPool");
-        $this->sd = get_instance()->getAsynPool("sd");
+        $this->test = get_instance()->getAsynPool("test");
         $this->weixin = get_instance()->getAsynPool("WeiXinAPI");
         $this->weixinApi = get_instance()->getAsynPool("WeiXin");
 
@@ -307,11 +307,13 @@ class AppController extends Controller
 
     }
 
-    public function http_method()
+    public function http_t()
     {
-        $this->sd->dbQueryBuilder->select('*')->from('users')->where('id', 31);
-        $this->sd->query(function ($result) {
-            $this->http_output->end($result, false);
-        });
+        $data = [
+            'user_name' => date('Y-m-d H:i:s'),
+            'emails' => 'oranzh.cc@gmail.com',
+        ];
+        $res = $this->test->dbQueryBuilder->insert('users')->set($data)->query();
+        $this->http_output->end($res->getResult());
     }
 }

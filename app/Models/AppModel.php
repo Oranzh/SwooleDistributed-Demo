@@ -17,15 +17,18 @@ class AppModel extends  Model
     public function __construct()
     {
         parent::__construct();
-        //$this->mysql = get_instance()->getAsynPool("mysqlPool");
-        $this->sd = get_instance()->getAsynPool("sd");
+        $this->mysql = get_instance()->getAsynPool("mysqlPool");
+        $this->test = get_instance()->getAsynPool("test");
     }
 
     public function initialization(&$context)
     {
         parent::initialization($context);
-        if ($this->sd != null) {
-            $this->installMysqlPool($this->sd);
+        if ($this->test != null) {
+            $this->installMysqlPool($this->test);
+        }
+        if ($this->mysql != null) {
+            $this->installMysqlPool($this->mysql);
         }
     }
 
@@ -34,13 +37,12 @@ class AppModel extends  Model
             'user_name' => 'lee123'.rand(1000,9999),
             'emails' => 'oranzh.cc@gmail.com',
         ];
-        var_dump($this->sd);
-        $res = $this->sd->dbQueryBuilder->insert($this->table)->set($data)->query();
+        $res = $this->mysql->dbQueryBuilder->insert($this->table)->set($data)->query();
         return $res->getResult();
     }
 
     public function getAll() {
-        $res = $this->sd->dbQueryBuilder->select("*")->from($this->table)->query();
+        $res = $this->test->dbQueryBuilder->select("*")->from($this->table)->query();
         return $res->getResult();
     }
 }
