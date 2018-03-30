@@ -45,19 +45,16 @@ class AppController extends Controller
     protected function initialization($controller_name, $method_name)
     {
         parent::initialization($controller_name, $method_name);
-       // $this->http_output->setHeader('Content-Type', 'text/html; charset=UTF-8');
-//        if ($this->mysql != null) {
-//            $this->installMysqlPool($this->mysql);
-//        }
-        //secho('comehere','hellosd')
+        if ($this->mysql != null) {
+            $this->installMysqlPool($this->mysql);
+        }
         if ($this->sd != null) {
+            secho('sd','is not null');
             $this->installMysqlPool($this->sd);
         }
         $this->AppModel = $this->loader->model('AppModel', $this);
         $this->ImageModel = $this->loader->model('ImageModel', $this);
-
         $this->redis = get_instance()->getAsynPool("redisPool");
-        //$this->mysql = get_instance()->getAsynPool("mysqlPool");
     }
 
     public function http_sd() {
@@ -285,5 +282,36 @@ class AppController extends Controller
         $res = decode_aes($data,$key);
         secho('res',$res);
         $this->http_output->end($res);
+    }
+
+    public function http_tpl()
+    {
+        $this->http_output->setHeader('Content-Type', 'text/html; charset=UTF-8');
+        if ('GET' === $this->http_input->getRequestMethod()) {
+            $data = [
+                'name' => 'lee',
+                'sex' => 'male'
+            ];
+            $tpl = $this->loader->view('app::app/oranzh', $data);
+            $this->http_output->end($tpl);
+        }
+        $name = $this->http_input->getPost('name');
+        $emails = $this->http_input->getPost('emails');
+        $data = [
+            'user_name' => $name,
+            'emails' => $emails,
+        ];
+        $res = $this->db->insert('users')->set($data)->query();
+        $res = $res->getResult();
+        $this->http_output->end($res);
+
+    }
+
+    public function http_method()
+    {
+        $this->sd->dbQueryBuilder->select('*')->from('users')->where('id', 31);
+        $this->sd->query(function ($result) {
+            $this->http_output->end($result, false);
+        });
     }
 }

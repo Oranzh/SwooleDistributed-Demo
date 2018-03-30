@@ -51,7 +51,7 @@ class AppServer extends SwooleDistributedServer
         }
         if ($this->config->get('mysql.enable', true)) {
             $this->asynPools['mysqlPool'] = new MysqlAsynPool($this->config, $this->config->get('mysql.active'));
-            $this->addAsynPool('test',new MysqlAsynPool($this->config, 'test'));
+            $this->addAsynPool('sd',new MysqlAsynPool($this->config, 'sd'));
         }
         $this->redis_pool = $this->asynPools['redisPool'] ?? null;
         $this->mysql_pool = $this->asynPools['mysqlPool'] ?? null;

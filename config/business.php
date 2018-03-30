@@ -20,6 +20,16 @@ $config['http']['root'] = [
     'default' =>
         [
             'render' => "server::welcome" //转到模板
+        ],
+    'oranzh.cc' =>
+        [
+            'root' => 'www',
+            'index' => 'Index.html'
+        ],
+    '60.205.184.253' =>
+        [
+            'root' => 'localhost',
+            'index' => 'Index.html'
         ]
 ];
 

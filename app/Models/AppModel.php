@@ -18,7 +18,7 @@ class AppModel extends  Model
     {
         parent::__construct();
         //$this->mysql = get_instance()->getAsynPool("mysqlPool");
-        $this->sd = get_instance()->getAsynPool("test");
+        $this->sd = get_instance()->getAsynPool("sd");
     }
 
     public function initialization(&$context)
@@ -34,12 +34,13 @@ class AppModel extends  Model
             'user_name' => 'lee123'.rand(1000,9999),
             'emails' => 'oranzh.cc@gmail.com',
         ];
+        var_dump($this->sd);
         $res = $this->sd->dbQueryBuilder->insert($this->table)->set($data)->query();
         return $res->getResult();
     }
 
     public function getAll() {
-        $res = $this->mysql_pool->dbQueryBuilder->select("*")->from($this->table)->query()->dump();
+        $res = $this->sd->dbQueryBuilder->select("*")->from($this->table)->query();
         return $res->getResult();
     }
 }
