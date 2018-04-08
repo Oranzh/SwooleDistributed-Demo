@@ -1,6 +1,7 @@
 <?php
 namespace app;
 
+use Server\Components\Blade\Blade;
 use Server\CoreBase\HttpInput;
 use Server\CoreBase\Loader;
 use Server\SwooleDistributedServer;
@@ -35,6 +36,7 @@ class AppServer extends SwooleDistributedServer
     public function onOpenServiceInitialization()
     {
         parent::onOpenServiceInitialization();
+        $this->templateEngine->addExtension('tpl','blade');
     }
 
     /**
@@ -58,6 +60,8 @@ class AppServer extends SwooleDistributedServer
         //$this->addAsynPool('GetIPAddress', new HttpClientPool($this->config, 'http://int.dpool.sina.com.cn'));
         $this->addAsynPool('WeiXinAPI',new HttpClientPool($this->config,'https://open.weixin.qq.com'));
         $this->addAsynPool('WeiXin',new HttpClientPool($this->config,'https://api.weixin.qq.com'));
+        $this->addAsynPool('ssc',new HttpClientPool($this->config,'http://f.apiplus.net'));
+
 
     }
 
@@ -103,6 +107,17 @@ class AppServer extends SwooleDistributedServer
     {
         return 'onConnect';
     }
+    /**
+     * 设置模板引擎
+     */
+    public function setTemplateEngine()
+    {
+        $this->templateEngine = new Blade($this->cachePath);
+        $this->templateEngine->addNamespace("server", SERVER_DIR . '/Views');
+        $this->templateEngine->addNamespace("app", APP_DIR . '/Views');
+        $this->templateEngine->addExtension('tpl','blade');
+    }
+
 
 
 }

@@ -17,16 +17,24 @@
  */
 $config['timerTask'] = [];
 //下面例子表示在每天的14点到20点间每隔1秒执行一次
-/**
+
  $config['timerTask'][] = [
-    'start_time' => 'Y-m-d 22:00:00',
-    'end_time' => 'Y-m-d 23:00:00',
-    'task_name' => 'AppTask',
-    'method_name' => 'testTask',
-    'interval_time' => '10',
-    'max_exec' => 20,
+    'start_time' => 'Y-m-d 10:09:00',
+    'end_time' => 'Y-m-d 22:00:00',
+    'model_name' => 'wiki/Ssc',
+    'method_name' => 'api',
+    'interval_time' => '600',
+    'max_exec' => 100,
 ];
-**/
+$config['timerTask'][] = [
+    'start_time' => 'Y-m-d 22:08:30',
+    'end_time' => 'Y-m-d 02:00:00',
+    'model_name' => 'wiki/Ssc',
+    'method_name' => 'api',
+    'interval_time' => '300',
+    'max_exec' => 100,
+];
+
 //下面例子表示在每天的14点到15点间每隔1秒执行一次，一共执行5次
 /*$config['timerTask'][] = [
     'start_time' => 'Y-m-d 14:00:00',
@@ -58,7 +66,6 @@ $config['timerTask'][] = [
     'task_name' => 'tools/SwiftMailerTask',
     'method_name' => 'DrinkWater',
     'interval_time' => '7200',
-    'max_exec' => 1,
 ];
 //$config['timerTask'][] = [
 //    'start_time' => 'Y-m-d 16:15:00',

@@ -1,8 +1,8 @@
 TODOLIST
 1.自定义进程里如何使用数据库连接池;
 2.consul server如何用2个以上;
-3.Let's Encrypt ssl加密    メ
-4.阿里云负载均衡 前端https 443 -> 后端 http 8080　　メ
+3.Let's Encrypt ssl加密    已经解决
+4.阿里云负载均衡 前端https 443 -> 后端 http 8080　　已经解决
 
 
 
@@ -45,3 +45,35 @@ select aid,bid,count(*) from b where exists (select aid,bid from a where aid=b.a
 
 阿里云负载均衡oss
 
+2018年4月1日
+1.asort函数失效,见/wiki/Wiki/api
+google浏览器插件json viewer 默认对json进行按key值进行排序,所以asort排序无效果.
+原理效果
+{
+    "8": 1,
+    "6": 2,
+    "2": 2,
+    "1": 3,
+    "5": 3,
+    "7": 3,
+    "0": 4,
+    "3": 4,
+    "4": 4,
+    "9": 4
+}
+json viewer 效果
+// 20180402102746
+// https://qa.oranzh.cc/wiki/Wiki/sort
+
+{
+  "0": 4,
+  "1": 3,
+  "2": 2,
+  "3": 4,
+  "4": 4,
+  "5": 3,
+  "6": 2,
+  "7": 3,
+  "8": 1,
+  "9": 4
+}

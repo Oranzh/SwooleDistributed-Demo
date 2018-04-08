@@ -21,16 +21,23 @@ $config['http']['root'] = [
         [
             'render' => "server::welcome" //转到模板
         ],
+
+    '高明霞.我爱你' =>
+        [
+            'render' => "app::wiki/page/user/detail/main" //转到模板
+        ],
     'oranzh.cc' =>
         [
             'root' => 'www',
-            'index' => 'Index.html'
+            'index' => 'index.html'
         ],
     '60.205.184.253' =>
         [
-            'root' => 'localhost',
-            'index' => 'Index.html'
+            'render' => "app::app/oranzh"
+//            'root' => 'localhost',
+//            'index' => 'Index.html'
         ]
+
 ];
 
 return $config;

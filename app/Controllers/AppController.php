@@ -4,6 +4,7 @@ namespace app\Controllers;
 
 use app\Models\AppModel;
 use app\Models\ImageModel;
+use oranzh\Oranzh;
 use Server\CoreBase\Controller;
 use Server\CoreBase\ChildProxy;
 use app\Process\MyProcess;
@@ -307,6 +308,17 @@ class AppController extends Controller
 
     }
 
+    public function http_tpl2()
+    {
+        $this->http_output->setHeader('Content-Type', 'text/html; charset=UTF-8');
+        $data = [
+            'name' => 'lee',
+            'sex' => 'male'
+        ];
+        $tpl = $this->loader->view('app::app/123', $data);
+        $this->http_output->end($tpl);
+    }
+
     public function http_t()
     {
         $data = [
@@ -315,5 +327,12 @@ class AppController extends Controller
         ];
         $res = $this->test->dbQueryBuilder->insert('users')->set($data)->query();
         $this->http_output->end($res->getResult());
+    }
+
+    public function http_oranzh()
+    {
+        $oranzh = new Oranzh();
+        $res = $oranzh->test();
+        $this->http_output->end($res);
     }
 }
