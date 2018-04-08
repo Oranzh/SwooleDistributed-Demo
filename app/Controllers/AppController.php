@@ -104,6 +104,8 @@ class AppController extends Controller
         $this->http_output->end($res);
     }
 
+
+
     public function http_ab() {
         $data = [
             'name' => 'leexiaohui',
@@ -171,6 +173,7 @@ class AppController extends Controller
     public function onConnect()
     {
         $msg = 'connect to a server'.$this->fd;
+        //get_instance()->protect($this->fd);
         $this->send($msg);
 
     }
