@@ -61,8 +61,10 @@ class AppServer extends SwooleDistributedServer
         $this->addAsynPool('WeiXinAPI',new HttpClientPool($this->config,'https://open.weixin.qq.com'));
         $this->addAsynPool('WeiXin',new HttpClientPool($this->config,'https://api.weixin.qq.com'));
         $this->addAsynPool('ssc',new HttpClientPool($this->config,'http://f.apiplus.net'));
-
-
+        $this->addAsynPool('sscquick',new HttpClientPool($this->config,'http://t.apiplus.net/'));
+        $this->addAsynPool('xluob',new HttpClientPool($this->config,'http://qa.xluob.com:8080'));
+        $this->addAsynPool('hr',new HttpClientPool($this->config,'http://www.hrppq.net'));
+        $this->addAsynPool('bus',new MysqlAsynPool($this->config, 'bus'));
     }
 
     /**
@@ -71,7 +73,9 @@ class AppServer extends SwooleDistributedServer
     public function startProcess()
     {
         parent::startProcess();
-        ProcessManager::getInstance()->addProcess(MyProcess::class);
+        for ($i = 1;$i <= 5 ; $i++) {
+            ProcessManager::getInstance()->addProcess(MyProcess::class,'my_process'.$i);
+        }
     }
 
     /**
@@ -97,7 +101,7 @@ class AppServer extends SwooleDistributedServer
      */
     public function getEventControllerName()
     {
-        return 'AppController';
+        return 'Ws';
     }
 
     /**

@@ -501,4 +501,9 @@ class TestController extends Controller
         $this->http_output->end($res,false);
     }
 
+    public function http_echo1()
+    {
+        $this->http_output->end(123);
+    }
+
 }

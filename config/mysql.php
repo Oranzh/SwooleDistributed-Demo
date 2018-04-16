@@ -20,6 +20,14 @@ $config['mysql']['sd']['user'] = 'work';
 $config['mysql']['sd']['password'] = 'work@147852';
 $config['mysql']['sd']['database'] = 'sd';
 $config['mysql']['sd']['charset'] = 'utf8';
+
+$config['mysql']['bus']['host'] = '127.0.0.1';
+$config['mysql']['bus']['port'] = '3306';
+$config['mysql']['bus']['user'] = 'root';
+$config['mysql']['bus']['password'] = '123456';
+$config['mysql']['bus']['database'] = 'bus';
+$config['mysql']['bus']['charset'] = 'utf8';
+
 $config['mysql']['asyn_max_count'] = 10;
 
 return $config;

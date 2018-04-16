@@ -18,7 +18,7 @@ class Ssc extends  Model
     public function __construct()
     {
         parent::__construct();
-        $this->ssc = get_instance()->getAsynPool("ssc");
+        $this->ssc = get_instance()->getAsynPool("sscquick");
         $this->test = get_instance()->getAsynPool("test");
         $this->redis = get_instance()->getAsynPool("redisPool");
     }
@@ -29,14 +29,27 @@ class Ssc extends  Model
         if ($this->test != null) {
             $this->installMysqlPool($this->test);
         }
+        $this->setTable();
+        secho('table',date('H:i:s',time()).$this->table);
     }
 
+    public function setTable()
+    {
+        $h = date('H',time());
+        if ($h >= 22 or $h < 3 ) $this->table = 'ssc_neight';
+        else $this->table = 'ssc';
+    }
+
+    public function neight()
+    {
+        $this->api();
+    }
     public function api() {
-        $res = $this->ssc->httpClient->setQuery([])->coroutineExecute('/cqssc-10.json');
+        $res = $this->ssc->httpClient->setQuery([])->coroutineExecute('/newly.do?code=cqssc&rows=10&format=json');
         $res = json_decode($res['body'],true);
         $data = $res['data'];
         sleepCoroutine(3000);
-        $res2 = $this->ssc->httpClient->setQuery([])->coroutineExecute('/cqssc-20.json');
+        $res2 = $this->ssc->httpClient->setQuery([])->coroutineExecute('/newly.do?code=cqssc&rows=20&format=json');
         $res2 = json_decode($res2['body'],true);
         $data2 = $res2['data'];
 
@@ -100,7 +113,7 @@ class Ssc extends  Model
         if (in_array($kaijiang['opencode'],$redis_ssc)) {
             //处理中奖逻辑,并且复利
             $times = $this->redis->getCoroutine()->get('times');
-            $profit = 1950 * $times;
+            $profit = 1940 * $times;
             if ($times == 3) {
                 $times = 4;
             } else {
@@ -136,7 +149,8 @@ class Ssc extends  Model
             'ge' => json_encode($ge),
             'profit' => 0 ,
             'status' => 0 ,
-            'create_time' => time()
+            'create_time' => time(),
+            'ymd' => date('Ymd',time()),
         ];
         $this->test->dbQueryBuilder->insert($this->table)->set($insert)->query();
         //写入缓存
@@ -207,6 +221,13 @@ class Ssc extends  Model
         $sql = 'select sum(bet) as m , sum(profit)  as n from  '.$this->table.' where  create_time between  '.mktime(0,0,0,date('m',time()),date('d',time()),date('Y',time())) .' and '.mktime(23,59,59,date('m',time()),date('d',time()),date('Y',time()));
         $bet_today = $this->test->dbQueryBuilder->query($sql);
         return $bet_today->getResult();
+    }
+
+    public function day()
+    {
+        $sql = "select ymd , DATE_FORMAT(ymd,'%W')  as  Week,sum(bet) as m ,sum(profit) as n from ssc  group by ymd ORDER BY create_time desc";
+        $res = $this->test->dbQueryBuilder->query($sql);
+        return $res->getResult();
     }
 
 }

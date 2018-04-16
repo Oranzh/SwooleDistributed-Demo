@@ -12,6 +12,7 @@ use Server\Components\Process\ProcessManager;
 use app\Tasks\tools\OssTask;
 use Server\CoreBase\SwooleException;
 use Server\CoreBase\SwooleInterruptException;
+use Server\Components\CatCache\TimerCallBack;
 
 
 /**
@@ -32,6 +33,7 @@ class AppController extends Controller
     protected $weixin;
     protected $sd;
     protected $oss;
+    protected $hr;
     public function __construct($proxy = ChildProxy::class)
     {
         parent::__construct($proxy);
@@ -40,6 +42,7 @@ class AppController extends Controller
         $this->test = get_instance()->getAsynPool("test");
         $this->weixin = get_instance()->getAsynPool("WeiXinAPI");
         $this->weixinApi = get_instance()->getAsynPool("WeiXin");
+        $this->hr = get_instance()->getAsynPool("hr");
 
     }
 
@@ -219,7 +222,7 @@ class AppController extends Controller
     }
 
     public function http_process() {
-        $res = ProcessManager::getInstance()->getRpcCall(MyProcess::class)->getData();
+        $res = ProcessManager::getInstance()->getRpcCall(MyProcess::class,'auto','my_process'.rand(1,5))->getData();
         $this->http_output->end($res);
     }
 
@@ -271,7 +274,7 @@ class AppController extends Controller
         $data->sex = 'male';
         if(empty($data)) throw new SwooleException('请get传data');
         $key = 'oranzh';
-        $res = encode_aes($data,$key);
+        $res = encode_aes($data,$key,true);
         $this->http_output->end($res);
     }
 
@@ -328,8 +331,10 @@ class AppController extends Controller
             'user_name' => date('Y-m-d H:i:s'),
             'emails' => 'oranzh.cc@gmail.com',
         ];
+
         $res = $this->test->dbQueryBuilder->insert('users')->set($data)->query();
-        $this->http_output->end($res->getResult());
+        $token = TimerCallBack::addTimer(10,AppModel::class,'timerCallBack',[$res['insert_id'],234]);
+        $this->http_output->end($token);
     }
 
     public function http_oranzh()
@@ -337,5 +342,75 @@ class AppController extends Controller
         $oranzh = new Oranzh();
         $res = $oranzh->test();
         $this->http_output->end($res);
+    }
+
+    public function http_update()
+    {
+        $all = $this->test->dbQueryBuilder->select('*')->from('ssc')->query();
+        $all = $all->getResult()['result'];
+//        $num = 0 ;
+//        if ($all) {
+//            foreach ($all as $v) {
+//                $ymd = date('Ymd',$v['create_time']);
+//                $this->test->dbQueryBuilder->update('ssc')->set('ymd',$ymd)->where('id',$v['id'])->query();
+//                $num += 1;
+//            }
+//        }
+        $this->http_output->end($all);
+    }
+
+    public function http_hr()
+    {
+        $codes = '019&029&089&123&124';
+        $count = 5;
+        $times = 5;
+        $money = 0.5;
+        $desc = '[后三直选_单式] 019|029|089|123|124';
+        $qishu = date('Ymd',time()).'-049'.;
+        $json = [
+            'type' => 'input',
+            'methodid' => 11,
+            'codes' => $codes,//019&029&089&123&124
+            'zip' => 0,
+            'nums' => $count,
+            'times' => $times,
+            'money' => $money,//单位元
+            'mode' => 3,
+            'point' => 0,
+            'desc' => $desc,//[后三直选_单式] 019|029|089|123|124
+            'curtimes' => time().rand(100,999)
+        ];
+        $data = [
+            'mainForm' => 'mainForm',
+            'lotteryid' => 1,
+            'flag' => 'save',
+            'lt_sel_times' => 1,
+            'lt_sel_modes' => 3,
+            'lt_sel_dyprize' => '1940|0',
+            'lt_project[]' => json_encode($json),
+            'lt_issue_start' => $qishu,//
+            'lt_total_nums' => $count,//
+            'lt_total_money' => 0.5,//单位元
+            'lt_trace_times_margin' => 1,
+            'lt_trace_margin' => 50,
+            'lt_trace_times_same' => 1,
+            'lt_trace_diff' => 1,
+            'lt_trace_times_diff' => 2,
+            'lt_trace_count_input' => 10,
+            'lt_trace_money' => 0
+        ];
+        $cookie = [
+            'JSESSIONID' => 'E68073FA4DB58E5C8FBA21F90C06BF85',
+            'modes' => 3,
+            'dypoint' => 0
+        ];
+
+        $response = $this->hr->httpClient
+            ->setMethod('post')
+            ->setCookies($cookie)
+            ->setData($data)
+            ->coroutineExecute('/LotteryService.aspx');
+        secho('response',$response);
+        $this->http_output->end($response);
     }
 }

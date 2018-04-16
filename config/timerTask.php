@@ -19,21 +19,32 @@ $config['timerTask'] = [];
 //下面例子表示在每天的14点到20点间每隔1秒执行一次
 
  $config['timerTask'][] = [
-    'start_time' => 'Y-m-d 10:09:00',
+    'start_time' => 'Y-m-d 10:05:00',
     'end_time' => 'Y-m-d 22:00:00',
     'model_name' => 'wiki/Ssc',
     'method_name' => 'api',
     'interval_time' => '600',
     'max_exec' => 100,
+     'delay' => false
 ];
+
 $config['timerTask'][] = [
-    'start_time' => 'Y-m-d 22:08:30',
-    'end_time' => 'Y-m-d 02:00:00',
+    'start_time' => 'Y-m-d 22:03:00',
+    'end_time' => 'Y-m-d 24:00:00',
     'model_name' => 'wiki/Ssc',
-    'method_name' => 'api',
+    'method_name' => 'neight',
     'interval_time' => '300',
     'max_exec' => 100,
 ];
+$config['timerTask'][] = [
+    'start_time' => 'Y-m-d 00:03:00',
+    'end_time' => 'Y-m-d 02:00:00',
+    'model_name' => 'wiki/Ssc',
+    'method_name' => 'neight',
+    'interval_time' => '300',
+    'max_exec' => 100,
+];
+
 
 //下面例子表示在每天的14点到15点间每隔1秒执行一次，一共执行5次
 /*$config['timerTask'][] = [

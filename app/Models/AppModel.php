@@ -8,6 +8,7 @@
 
 namespace app\Models;
 
+use Server\Components\CatCache\TimerCallBack;
 use Server\CoreBase\Model;
 class AppModel extends  Model
 {
@@ -43,6 +44,18 @@ class AppModel extends  Model
 
     public function getAll() {
         $res = $this->test->dbQueryBuilder->select("*")->from($this->table)->query();
+        return $res->getResult();
+    }
+
+    public function timerCallBack($id,$var,$token)
+    {
+        var_dump(123123123);
+        var_dump($var);
+        $res = $this->test->dbQueryBuilder->update('users')
+            ->set('user_name','callback')
+            ->where('id',$id)
+            ->query();
+        TimerCallBack::ack($token);
         return $res->getResult();
     }
 }

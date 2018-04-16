@@ -2,7 +2,7 @@
 //错误收集上报系统
 $config['error']['enable'] = true;
 //访问地址，需自己设置ip：port
-$config['error']['url'] = "Https://qa.oranzh.cc/Error";
+$config['error']['url'] = "Http://oranzh.cc/Error";
 $config['error']['redis_prefix'] = '@sd-error_';
 $config['error']['redis_timeOut'] = '36000';
 $config['error']['dingding_enable'] = true;
