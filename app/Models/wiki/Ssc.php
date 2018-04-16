@@ -15,12 +15,14 @@ class Ssc extends  Model
     protected $test;
     protected $redis;
     protected $table = 'ssc';
+    protected $hr;
     public function __construct()
     {
         parent::__construct();
         $this->ssc = get_instance()->getAsynPool("sscquick");
         $this->test = get_instance()->getAsynPool("test");
         $this->redis = get_instance()->getAsynPool("redisPool");
+        $this->hr = get_instance()->getAsynPool("hr");
     }
 
     public function initialization(&$context)
@@ -156,6 +158,11 @@ class Ssc extends  Model
         //写入缓存
         $this->redis->getCoroutine()->set('ssc',json_encode($res));
         $this->redis->getCoroutine()->set('times',$times);
+
+        //购买
+        $qishu = substr($expect,0,8).'-'.substr($expect,-3);
+        $money = $count * $times * 2 /100;
+        $this->hr($res,$money,$qishu,$times);
         return $res;
     }
 
@@ -207,6 +214,7 @@ class Ssc extends  Model
             else continue;
         }
         UNSET($item);
+        secho('haoma',$res);
         return $res;
 
     }
@@ -229,6 +237,61 @@ class Ssc extends  Model
         $res = $this->test->dbQueryBuilder->query($sql);
         return $res->getResult();
     }
+
+    public function hr($codes,$money,$qishu,$times) {
+        $count = count($codes);
+        $tmp = $codes;
+        $codes = implode('&',$codes);
+        $desc = '[后三直选_单式] ';
+        $desc .= implode('|',$tmp);
+        $desc = substr($desc,0,57).'...';
+        $json = [
+            'type' => 'input',
+            'methodid' => 11,
+            'codes' => $codes,//019&029&089&123&124
+            'zip' => 0,
+            'nums' => $count,
+            'times' => $times,
+            'money' => $money,//单位元
+            'mode' => 3,
+            'point' => 0,
+            'desc' => $desc,//[后三直选_单式] 019|029|089|123|124
+            'curtimes' => time().rand(100,999)
+        ];
+        $data = [
+            'mainForm' => 'mainForm',
+            'lotteryid' => 1,
+            'flag' => 'save',
+            'lt_sel_times' => 1,
+            'lt_sel_modes' => 3,
+            'lt_sel_dyprize' => '1940|0',
+            'lt_project[]' => json_encode($json),
+            'lt_issue_start' => $qishu,//
+            'lt_total_nums' => $count,//
+            'lt_total_money' => $money,//单位元
+            'lt_trace_times_margin' => 1,
+            'lt_trace_margin' => 50,
+            'lt_trace_times_same' => 1,
+            'lt_trace_diff' => 1,
+            'lt_trace_times_diff' => 2,
+            'lt_trace_count_input' => 10,
+            'lt_trace_money' => 0
+        ];
+        $cookie = [
+            'JSESSIONID' => 'E68073FA4DB58E5C8FBA21F90C06BF85',
+            'modes' => 3,
+            'dypoint' => 0
+        ];
+
+        $response = $this->hr->httpClient
+            ->setMethod('post')
+            ->setCookies($cookie)
+            ->setData($data)
+            ->coroutineExecute('/LotteryService.aspx');
+        secho('response',$response);
+        return $response;
+    }
+
 
 }
 

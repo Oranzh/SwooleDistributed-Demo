@@ -23,10 +23,11 @@ CREATE TABLE `user` (
   `phone` char(20) NOT NULL DEFAULT '' COMMENT '手机号',
   `avatar` VARCHAR (128) NOT NULL DEFAULT '' COMMENT '头像',
   `passwd` VARCHAR (256) NOT NULL DEFAULT '',
-  `key` VARCHAR (256) NOT NULL DEFAULT '',
   `status` tinyint(1) NOT NULL,
   `create_time` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY (`phone`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
+
+ALTER TABLE `user` ADD COLUMN `nickname` VARCHAR (60)  NULL DEFAULT '普通用户' COMMENT '昵称';
 

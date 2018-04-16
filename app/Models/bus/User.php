@@ -34,19 +34,21 @@ class User extends  Model
         return $res->result_array();
     }
 
-    public function records()
+    public function insert($data)
     {
-        $sql = 'select sum(bet) as m , sum(profit)  as n from  '.$this->table.' where  create_time between  '.mktime(0,0,0,date('m',time()),date('d',time()),date('Y',time())) .' and '.mktime(23,59,59,date('m',time()),date('d',time()),date('Y',time()));
-        $bet_today = $this->test->dbQueryBuilder->query($sql);
-        return $bet_today->getResult();
+        $res = $this->bus->dbQueryBuilder->insert($this->table)->set($data)->query();
+        return $res->insert_id();
     }
 
-    public function day()
+    public function passwd($passwd)
     {
-        $sql = "select ymd , DATE_FORMAT(ymd,'%W')  as  Week,sum(bet) as m ,sum(profit) as n from ssc  group by ymd ORDER BY create_time desc";
-        $res = $this->test->dbQueryBuilder->query($sql);
-        return $res->getResult();
+        return substr(md5($passwd),10,16);
     }
 
+    public function validatePasswd($passwd,$md5_passwd)
+    {
+        if ($this->passwd($passwd) != $md5_passwd) return false;
+        return true;
+    }
 }
 

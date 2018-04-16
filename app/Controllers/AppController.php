@@ -63,7 +63,7 @@ class AppController extends Controller
 
     public function http_sd() {
 
-        $this->http_output->end();
+        $this->http_output->end(123);
     }
     public function http_test1()
     {
@@ -366,7 +366,7 @@ class AppController extends Controller
         $times = 5;
         $money = 0.5;
         $desc = '[后三直选_单式] 019|029|089|123|124';
-        $qishu = date('Ymd',time()).'-049'.;
+        $qishu = date('Ymd',time()).'-055';
         $json = [
             'type' => 'input',
             'methodid' => 11,
