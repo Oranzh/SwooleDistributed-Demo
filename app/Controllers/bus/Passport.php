@@ -8,13 +8,12 @@
 
 namespace app\Controllers\bus;
 
-use Server\Asyn\HttpClient\HttpClientRequestCoroutine;
-use Server\CoreBase\Controller;
+use app\BlueException;
+use app\Controllers\BaseController;
 use Server\CoreBase\ChildProxy;
-use Server\CoreBase\SwooleException;
 use app\Models\bus\User;
 
-class Passport extends Controller
+class Passport extends BaseController
 {
 
     private $pub_key = 'JKLDJFIHKJ4456848@#$adf';
@@ -34,11 +33,7 @@ class Passport extends Controller
     {
         $phone = $this->http_input->get('phone');
         if (!preg_match('/^1[3-9]{1}[0-9]{9}$/', $phone)) {
-            $res = [
-                'msg' => '手机号不正确',
-                'flag' => 1
-            ];
-            $this->http_output->end($res);
+            $this->end('手机号不正确',1);
         }
         $passwd = $this->http_input->get('passwd');
         $tmp_user = $this->user->getOneByPhone($phone);
@@ -55,22 +50,18 @@ class Passport extends Controller
             $token = [
                 'id' => $id,
                 'phone' => $phone,
+                'time' => time()
             ];
         } else {
             $tmp_user = $tmp_user[0];
             $passwd = $this->http_input->get('passwd');
-            secho('tmpuser',$tmp_user);
             if (!$this->user->validatePasswd($passwd,$tmp_user['passwd'])) {
-                $res = [
-                    'msg' => '密码不正确',
-                    'flag' => 1
-                ];
-                $this->http_output->end($res);
-                $this->interrupt();
+                $this->end('密码不正确',1);
             }
             $token = [
                 'id' => $tmp_user['id'],
-                'phone' => $tmp_user['phone']
+                'phone' => $tmp_user['phone'],
+                'time' => time()
             ];
             $id = $tmp_user['id'];
         }
@@ -81,10 +72,9 @@ class Passport extends Controller
             'user' => [
                 'id' => $id,
                 'phone' => $phone,
-            ],
-            'flag' => 0,
+            ]
         ];
-        $this->http_output->end($res);
+        $this->end($res);
     }
 
     public function http_update()

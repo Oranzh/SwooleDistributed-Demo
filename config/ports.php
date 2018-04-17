@@ -16,6 +16,15 @@ $config['ports'][] = [
     'route_tool' => 'NormalRoute',
     'middlewares' => ['MonitorMiddleware']
 ];
+$config['ports'][] = [
+    'socket_type' => PortManager::SOCK_TCP,
+    'socket_name' => '0.0.0.0',
+    'socket_port' => 9092,
+    'pack_tool' => 'EofJsonPack',
+    'route_tool' => 'NormalRoute',
+    'middlewares' => ['MonitorMiddleware']
+];
+
 
 $config['ports'][] = [
     'socket_type' => PortManager::SOCK_HTTP,

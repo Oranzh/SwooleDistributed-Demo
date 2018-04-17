@@ -18,6 +18,7 @@
 $config['timerTask'] = [];
 //下面例子表示在每天的14点到20点间每隔1秒执行一次
 
+/**
  $config['timerTask'][] = [
     'start_time' => 'Y-m-d 10:05:00',
     'end_time' => 'Y-m-d 22:00:00',
@@ -28,22 +29,7 @@ $config['timerTask'] = [];
      'delay' => false
 ];
 
-$config['timerTask'][] = [
-    'start_time' => 'Y-m-d 22:03:00',
-    'end_time' => 'Y-m-d 24:00:00',
-    'model_name' => 'wiki/Ssc',
-    'method_name' => 'neight',
-    'interval_time' => '300',
-    'max_exec' => 100,
-];
-$config['timerTask'][] = [
-    'start_time' => 'Y-m-d 00:03:00',
-    'end_time' => 'Y-m-d 02:00:00',
-    'model_name' => 'wiki/Ssc',
-    'method_name' => 'neight',
-    'interval_time' => '300',
-    'max_exec' => 100,
-];
+**/
 
 
 //下面例子表示在每天的14点到15点间每隔1秒执行一次，一共执行5次
@@ -71,6 +57,7 @@ $config['timerTask'][] = [
     'interval_time' => '1',
     'max_exec' => 1,
 ];*/
+/**
 $config['timerTask'][] = [
     'start_time' => 'Y-m-d 08:00:00',
     'end_time' => 'Y-m-d 22:00:00',
@@ -78,6 +65,7 @@ $config['timerTask'][] = [
     'method_name' => 'DrinkWater',
     'interval_time' => '7200',
 ];
+**/
 //$config['timerTask'][] = [
 //    'start_time' => 'Y-m-d 16:15:00',
 //    'end_time' => 'Y-m-d 22:00:00',

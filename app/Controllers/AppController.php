@@ -97,6 +97,15 @@ class AppController extends Controller
         $this->http_output->end($res);
     }
 
+    public function http_incr()
+    {
+        $this->redis->getCoroutine()->set('sd',1);
+        for ($i = 0 ;$i < 10;$i++) {
+            $this->redis->getCoroutine()->incr('sd');
+        }
+        $this->http_output->end($this->redis->getCoroutine()->get('sd'));
+    }
+
     public function http_model() {
         $res = $this->AppModel->mysql();
         $this->http_output->end($res);

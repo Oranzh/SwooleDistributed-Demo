@@ -1,59 +1,27 @@
 <?php
-
-namespace app\Controllers;
-
-use app\Models\AppModel;
-use oranzh\Oranzh;
-use Server\CoreBase\Controller;
-use Server\CoreBase\ChildProxy;
-use app\Process\MyProcess;
-use Server\Components\Process\ProcessManager;
-use app\Tasks\tools\OssTask;
-use Server\CoreBase\SwooleException;
-
-
 /**
  * Created by PhpStorm.
- * User: zhangjincheng
- * Date: 16-7-15
- * Time: 下午3:51
+ * User: leexiaohui(oranzh.cc@gmail.com)
+ * Date: 2018/4/17
+ * Time: 9:05
  */
-class Ws extends Controller
+
+namespace app\Controllers\bus;
+
+
+use app\Controllers\BaseController;
+use Server\CoreBase\ChildProxy;
+
+class Ws extends BaseController
 {
-    /**
-     * @var AppModel
-     */
-    public $AppModel;
-    public $ImageModel;
-    protected $redis;
-    private $mysql;
-    protected $weixin;
-    protected $sd;
-    protected $oss;
     public function __construct($proxy = ChildProxy::class)
     {
         parent::__construct($proxy);
-        $this->redis = get_instance()->getAsynPool("redisPool");
-        $this->mysql = get_instance()->getAsynPool("mysqlPool");
-        $this->test = get_instance()->getAsynPool("test");
-        $this->weixin = get_instance()->getAsynPool("WeiXinAPI");
-        $this->weixinApi = get_instance()->getAsynPool("WeiXin");
-
     }
 
     protected function initialization($controller_name, $method_name)
     {
         parent::initialization($controller_name, $method_name);
-        if ($this->mysql != null) {
-            $this->installMysqlPool($this->mysql);
-        }
-        if ($this->sd != null) {
-            secho('sd','is not null');
-            $this->installMysqlPool($this->sd);
-        }
-        $this->AppModel = $this->loader->model('AppModel', $this);
-        $this->ImageModel = $this->loader->model('ImageModel', $this);
-        $this->redis = get_instance()->getAsynPool("redisPool");
     }
 
     /*
@@ -61,7 +29,6 @@ class Ws extends Controller
      */
     public function bind()
     {
-        secho('tcp---',$this->client_data);
         $uid = $this->client_data->uid;
         $this->bindUid($uid);
         $this->send("bind from server--ok----.$uid");
@@ -110,16 +77,11 @@ class Ws extends Controller
         $this->destroy();
     }
 
+
     public function onConnect()
     {
         $msg = 'connect to a server'.$this->fd;
         get_instance()->protect($this->fd);
-//        {"controller_name":"Ws","method_name":"bind","uid":"sd_15"}
-        $msg = [
-            'controller_name' => 'Ws',
-            'method_name' => 'bind',
-            'uid' => 'sd_15'
-        ];
         $this->send($msg);
 
     }
@@ -144,11 +106,11 @@ class Ws extends Controller
     /**
      * 通过UID获取该用户的所有订阅
      * [
-        "sd*123",
-        "sd*123/first",
-        "sd*123/second",
-        "sd*123/second/disanji"
-        ]
+    "sd*123",
+    "sd*123/first",
+    "sd*123/second",
+    "sd*123/second/disanji"
+    ]
      */
     public function http_getUidTopicsCoroutine ()
     {
@@ -164,5 +126,6 @@ class Ws extends Controller
         $res = get_instance()->getSubMembersCoroutine('sd*123');
         $this->http_output->end($res);
     }
+
 
 }
