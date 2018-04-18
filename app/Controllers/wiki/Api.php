@@ -31,17 +31,16 @@ class Api extends Controller
 
     public function http_put()
     {
-        $data = [
-            'phone' => 15249232349,
-            'password' => 123456
-		];
+        $data = $this->http_input->getAllPost();
+        $url = $data['url'];
+        UNSET($data['url']);
         $data = msgpack_pack($data);
         $response = $this->xluob->httpClient
-            ->setMethod('put')
+            ->setMethod('PUT')
             ->setData($data)
-            ->coroutineExecute('/radish/passport/login',function (HttpClientRequestCoroutine $httpClientRequestCoroutine){
+            ->coroutineExecute($url,function (HttpClientRequestCoroutine $httpClientRequestCoroutine){
                 $httpClientRequestCoroutine->setDowngrade(function () {
-                    $this->http_output->end('This is setDownGrade function!');
+                    $this->http_output->end('请勿频繁请求');
                 });
             });
         $response = msgpack_unpack($response['body']);

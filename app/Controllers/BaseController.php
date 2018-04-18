@@ -11,9 +11,11 @@ namespace app\Controllers;
 use Server\CoreBase\Controller;
 use Server\CoreBase\ChildProxy;
 use Server\SwooleMarco;
-
+use app\Models\bus\User;
 class BaseController extends Controller
 {
+    public $user;
+
     public function __construct($proxy = ChildProxy::class)
     {
         parent::__construct($proxy);
@@ -22,8 +24,18 @@ class BaseController extends Controller
     protected function initialization($controller_name, $method_name)
     {
         parent::initialization($controller_name, $method_name);
+        $this->user = $this->loader->model(User::class,$this);
     }
 
+    protected function getToken() {
+        return $this->http_input->post('_t')??[];
+    }
+
+    protected function getLogined() {
+        $token = $this->getToken();
+        $info = $this->user->check_token($token);
+        return $info;
+    }
 
     /**
      * @param $output
@@ -31,16 +43,7 @@ class BaseController extends Controller
      */
     public function end($output , $flag=0)
     {
-        //$res['data'] = [];
         $this->http_output->setHeader('Content-Type', 'application/json; charset=UTF-8');
-//        try {
-//            $res['data'] = array_merge($res['data'],$output);
-//            $res['flag'] = 0;
-//        }catch (BlueException $exception) {
-//            $res['flag'] = 1;
-//            $res['message'] = $exception->getMessage();
-//            $res['code'] = $exception->getTraceAsString();
-//        }
         if (is_array($output)) {
             $output['flag'] = $flag;
         } else {
@@ -52,22 +55,7 @@ class BaseController extends Controller
         $this->http_output->end($end);
     }
 
-    /**
-     * @param $token
-     * @return bool|array
-     */
-    public function check_token($token)
-    {
-        $token = decode_aes($token['encrypted'],$token['hash_key'],true);
-        if (empty($token) or empty($token['time']))  return false;
-        if ($token['expire']) {
 
-        } else {
-            //默认15天
-            if ($token['time'] + 86400 * 15 > time()) return false;
-        }
-        return $token;
-    }
     /**
      * 程序出错,发送日志到钉钉,不显示在客户端
      */
@@ -76,10 +64,10 @@ class BaseController extends Controller
         parent::onExceptionHandle($e, function (\Throwable $e) {
             switch ($this->request_type) {
                 case SwooleMarco::HTTP_REQUEST:
-                    $this->end($e->getMessage().' on Line '.$e->getLine(),1);
+                    $this->end($e->getMessage(),1);
                     break;
                 case SwooleMarco::TCP_REQUEST:
-                    $this->send($e->getMessage(),1);
+                    $this->send($e->getMessage());
                     break;
             }
         });

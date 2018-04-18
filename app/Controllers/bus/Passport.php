@@ -10,6 +10,7 @@ namespace app\Controllers\bus;
 
 use app\BlueException;
 use app\Controllers\BaseController;
+use app\Exception\BlueWarningException;
 use Server\CoreBase\ChildProxy;
 use app\Models\bus\User;
 
@@ -17,7 +18,6 @@ class Passport extends BaseController
 {
 
     private $pub_key = 'JKLDJFIHKJ4456848@#$adf';
-    private $user;
     public function __construct($proxy = ChildProxy::class)
     {
         parent::__construct($proxy);
@@ -26,14 +26,15 @@ class Passport extends BaseController
     protected function initialization($controller_name, $method_name)
     {
         parent::initialization($controller_name, $method_name);
-        $this->user = $this->loader->model(User::class,$this);
+
+        //$this->user = $this->loader->model(User::class,$this);
     }
 
     public function http_login()
     {
         $phone = $this->http_input->get('phone');
         if (!preg_match('/^1[3-9]{1}[0-9]{9}$/', $phone)) {
-            $this->end('手机号不正确',1);
+            throw new BlueWarningException('手机号不正确');
         }
         $passwd = $this->http_input->get('passwd');
         $tmp_user = $this->user->getOneByPhone($phone);
@@ -56,7 +57,7 @@ class Passport extends BaseController
             $tmp_user = $tmp_user[0];
             $passwd = $this->http_input->get('passwd');
             if (!$this->user->validatePasswd($passwd,$tmp_user['passwd'])) {
-                $this->end('密码不正确',1);
+                throw new BlueWarningException('密码不正确');
             }
             $token = [
                 'id' => $tmp_user['id'],
@@ -79,6 +80,8 @@ class Passport extends BaseController
 
     public function http_update()
     {
-
+        $info = $this->getLogined();
+        if (empty($info)) throw new BlueWarningException('需要登录');
+        $this->http_output->end($info);
     }
 }

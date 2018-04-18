@@ -50,5 +50,23 @@ class User extends  Model
         if ($this->passwd($passwd) != $md5_passwd) return false;
         return true;
     }
+
+    /**
+     * @param $token
+     * @return bool|array
+     */
+    public function check_token($token)
+    {
+        if (empty($token['encrypted']) or empty($token['hash_key'])) return false;
+        $token = decode_aes($token['encrypted'],$token['hash_key'],true);
+        if (empty($token) or empty($token['time']))  return false;
+        if ($token['expire']) {
+
+        } else {
+            //默认15天
+            if ($token['time'] + 86400 * 15 > time()) return false;
+        }
+        return $token;
+    }
 }
 

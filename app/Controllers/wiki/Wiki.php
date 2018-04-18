@@ -9,14 +9,13 @@
 namespace app\Controllers\wiki;
 
 
-use app\BlueException;
-use app\BlueWarningException;
+use app\Exception\BlueException;
+use app\Exception\BlueFatalException;
+use app\Exception\BlueWarningException;
 use app\Controllers\BaseController;
-use app\Models\wiki\Ssc;
 use app\Tasks\tools\OssTask;
 use oranzh\Qrcode;
 use Server\CoreBase\ChildProxy;
-use voku\helper\UTF8;
 
 
 class Wiki extends BaseController
@@ -70,35 +69,6 @@ class Wiki extends BaseController
 
     }
 
-    /*
-     * 测试钉钉机器人日志,请勿一直请求
-     */
-    public function http_throw()
-    {
-        $this->http_output->end($res);
-    }
-
-
-    public function http_ex()
-    {
-        throw new BlueWarningException('This is Warning');
-    }
-
-
-
-    public function http_day()
-    {
-        $ssc = $this->loader->model(Ssc::class,$this);
-        $res = $ssc->day();
-        $this->http_output->end($res);
-    }
-
-    public function http_record()
-    {
-        $ssc = $this->loader->model(Ssc::class,$this);
-        $res = $ssc->records();
-        $this->http_output->end($res);
-    }
 
     public function http_qrcode()
     {
@@ -109,18 +79,21 @@ class Wiki extends BaseController
         $this->http_output->end($url);
     }
 
-    public function http_sy()
+    /*
+     * 测试钉钉机器人日志,请勿一直请求
+     */
+    public function http_throw()
     {
-        $ssc = $this->loader->model(Ssc::class,$this);
-        $res = $ssc->shouyi();
-        $this->http_output->end($res);
+        $this->http_outpt->end($res);
     }
 
-    public function http_ynvi()
+    public function http_warning()
     {
-        $ssc = $this->loader->model(Ssc::class,$this);
-        $res = $ssc->ynvi();
-        $this->http_output->end($res);
+        throw new BlueWarningException('这条是warning');
+    }
+    public function http_fatal()
+    {
+        throw new BlueFatalException('这条是fatal');
     }
 
 }

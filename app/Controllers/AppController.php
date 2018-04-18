@@ -106,6 +106,23 @@ class AppController extends Controller
         $this->http_output->end($this->redis->getCoroutine()->get('sd'));
     }
 
+    public function http_resetNo()
+    {
+        if ($this->redis->getCoroutine()->exists('no')) {
+            $this->redis->getCoroutine()->set('no',0);
+            $res = 456;
+        } else {
+            $res = 123;
+        }
+        $this->http_output->end($res);
+    }
+
+    public function http_getNo()
+    {
+        $res = $this->redis->getCoroutine()->get('no');
+        $this->http_output->end($res);
+    }
+
     public function http_model() {
         $res = $this->AppModel->mysql();
         $this->http_output->end($res);

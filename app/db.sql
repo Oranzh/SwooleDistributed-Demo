@@ -31,3 +31,4 @@ CREATE TABLE `user` (
 
 ALTER TABLE `user` ADD COLUMN `nickname` VARCHAR (60)  NULL DEFAULT '普通用户' COMMENT '昵称';
 
+
