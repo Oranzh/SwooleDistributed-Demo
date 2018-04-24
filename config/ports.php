@@ -12,8 +12,8 @@ $config['ports'][] = [
     'socket_type' => PortManager::SOCK_TCP,
     'socket_name' => '0.0.0.0',
     'socket_port' => 9091,
-    'pack_tool' => 'LenJsonPack',
-    'route_tool' => 'NormalRoute',
+    'pack_tool' => 'LenJsonPackApp',
+    'route_tool' => 'NormalRouteApp',
     'middlewares' => ['MonitorMiddleware']
 ];
 $config['ports'][] = [

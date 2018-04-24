@@ -75,12 +75,13 @@ class OssTask extends Task
 
     /**
      * @param HttpInput $input
+     * @param $index string 对应form表单name
      * @return mixed 临时文件路径
      */
-    public function getFile(HttpInput $input)
+    public function getFile(HttpInput $input, $index = 'file')
     {
         $file = $input->getFiles();
-        if ($file['error'] === 0)   return $file['tmp_name'];
+        if ($file['error'] === 0)   return $file[$index]['tmp_name'];
         return false;
     }
 
@@ -90,8 +91,8 @@ class OssTask extends Task
      */
     public function getObject($object)
     {
-        if ($this->ossConfig['ns']) return $this->ossConfig['ns'].'/'.$object;
-        return $object;
+        if ($this->ossConfig['ns']) return $this->ossConfig['ns'].'/'.$object.'.png';
+        return $object.'.png';
     }
 
 }

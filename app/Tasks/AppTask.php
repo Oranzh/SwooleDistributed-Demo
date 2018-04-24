@@ -19,4 +19,7 @@ class AppTask extends Task
 			//return "test task\n";
 		}
     }
+    public function err() {
+        return $res;
+    }
 }

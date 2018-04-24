@@ -64,6 +64,7 @@ class AppServer extends SwooleDistributedServer
         $this->addAsynPool('sscquick',new HttpClientPool($this->config,'http://t.apiplus.net/'));
         $this->addAsynPool('xluob',new HttpClientPool($this->config,'http://qa.xluob.com:8080'));
         $this->addAsynPool('hr',new HttpClientPool($this->config,'http://www.hrppq.net'));
+        $this->addAsynPool('alicdn',new HttpClientPool($this->config,'https://gosspublic.alicdn.com'));
         $this->addAsynPool('bus',new MysqlAsynPool($this->config, 'bus'));
     }
 
@@ -118,7 +119,7 @@ class AppServer extends SwooleDistributedServer
     {
         $this->templateEngine = new Blade($this->cachePath);
         $this->templateEngine->addNamespace("server", SERVER_DIR . '/Views');
-        $this->templateEngine->addNamespace("app", TEMPLATE_DIR);
+        $this->templateEngine->addNamespace("app", APP_DIR . '/Views');
         $this->templateEngine->addExtension('tpl','blade');
     }
 

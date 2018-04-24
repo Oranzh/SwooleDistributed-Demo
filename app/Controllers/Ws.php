@@ -61,7 +61,6 @@ class Ws extends Controller
      */
     public function bind()
     {
-        secho('tcp---',$this->client_data);
         $uid = $this->client_data->uid;
         $this->bindUid($uid);
         $this->send("bind from server--ok----.$uid");
@@ -70,7 +69,7 @@ class Ws extends Controller
     {
         $sub = $this->client_data->sub;
         $this->addSub($sub);
-        $this->send("ok-----{$this->fd}");
+        $this->send("ok-----{$this->uid}");
     }
 
     public function sendToOnes()
@@ -117,8 +116,8 @@ class Ws extends Controller
 //        {"controller_name":"Ws","method_name":"bind","uid":"sd_15"}
         $msg = [
             'controller_name' => 'Ws',
-            'method_name' => 'bind',
-            'uid' => 'sd_15'
+            'method_name' => 'sub',
+            'sub' => 'first_topic'
         ];
         $this->send($msg);
 

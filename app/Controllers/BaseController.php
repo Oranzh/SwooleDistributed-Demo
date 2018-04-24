@@ -12,6 +12,8 @@ use Server\CoreBase\Controller;
 use Server\CoreBase\ChildProxy;
 use Server\SwooleMarco;
 use app\Models\bus\User;
+use app\Exception\BlueWarningException;
+
 class BaseController extends Controller
 {
     public $user;
@@ -24,16 +26,20 @@ class BaseController extends Controller
     protected function initialization($controller_name, $method_name)
     {
         parent::initialization($controller_name, $method_name);
-        $this->user = $this->loader->model(User::class,$this);
+        $this->user = $this->loader->model(User::class, $this);
     }
 
-    protected function getToken() {
-        return $this->http_input->post('_t')??[];
+    protected function getToken()
+    {
+        return $this->http_input->getPost('_t');
     }
 
-    protected function getLogined() {
+    protected function getLogined()
+    {
         $token = $this->getToken();
-        $info = $this->user->check_token($token);
+        secho('token',$token);
+        $info = $this->user->getInfo($token);
+        if (empty($info)) throw new BlueWarningException('需要登录');
         return $info;
     }
 
@@ -41,8 +47,9 @@ class BaseController extends Controller
      * @param $output
      * @param int $flag 0成功 1失败
      */
-    public function end($output , $flag=0)
+    public function end($output, $flag = 0, $gzip = true)
     {
+        $this->http_output->setHeader('Access-Control-Allow-Origin', '*');
         $this->http_output->setHeader('Content-Type', 'application/json; charset=UTF-8');
         if (is_array($output)) {
             $output['flag'] = $flag;
@@ -52,7 +59,7 @@ class BaseController extends Controller
             $output = $_output;
         }
         $end = json_encode($output, JSON_UNESCAPED_UNICODE);
-        $this->http_output->end($end);
+        $this->http_output->end($end, $gzip);
     }
 
 
@@ -64,7 +71,7 @@ class BaseController extends Controller
         parent::onExceptionHandle($e, function (\Throwable $e) {
             switch ($this->request_type) {
                 case SwooleMarco::HTTP_REQUEST:
-                    $this->end($e->getMessage(),1);
+                    $this->end($e->getMessage(), 1);
                     break;
                 case SwooleMarco::TCP_REQUEST:
                     $this->send($e->getMessage());

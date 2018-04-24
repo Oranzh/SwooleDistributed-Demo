@@ -9,7 +9,7 @@
  * @return array
  */
 function encode_aes($data,$public_key,$serialize = false,$method = 'aes-256-cbc') {
-    if($serialize) $data = swoole_serialize::pack($data);
+    if($serialize) $data = serialize($data);
     $key = password_hash($public_key, PASSWORD_BCRYPT, ['cost' => 12]);
     $iv = chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0);
     secho('data',$data);
@@ -30,7 +30,7 @@ function encode_aes($data,$public_key,$serialize = false,$method = 'aes-256-cbc'
 function decode_aes($data,$key,$serialize = false,$method = 'aes-256-cbc') {
     $iv = chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0);
     $decrypted = openssl_decrypt(base64_decode($data), $method, $key, OPENSSL_RAW_DATA, $iv);
-    if($serialize)  $decrypted = swoole_serialize::unpack($decrypted);
+    if($serialize)  $decrypted = unserialize($decrypted);
     return $decrypted;
 }
 

@@ -11,8 +11,8 @@ use app\Process\MyProcess;
 use Server\Components\Process\ProcessManager;
 use app\Tasks\tools\OssTask;
 use Server\CoreBase\SwooleException;
-use Server\CoreBase\SwooleInterruptException;
 use Server\Components\CatCache\TimerCallBack;
+use app\Controllers\BaseController;
 
 
 /**
@@ -21,7 +21,7 @@ use Server\Components\CatCache\TimerCallBack;
  * Date: 16-7-15
  * Time: 下午3:51
  */
-class AppController extends Controller
+class AppController extends BaseController
 {
     /**
      * @var AppModel
@@ -64,6 +64,19 @@ class AppController extends Controller
     public function http_sd() {
 
         $this->http_output->end(123);
+    }
+
+    public function http_setcookie()
+    {
+        $cookie = $this->http_input->get('cookie');
+        $this->http_output->setCookie('sd',$cookie);
+        $this->end('ok');
+    }
+
+    public function http_getcookie()
+    {
+        $cookie = $this->http_input->cookie('sd');
+        $this->end($cookie);
     }
     public function http_test1()
     {
@@ -253,16 +266,28 @@ class AppController extends Controller
     }
 
     public function http_oss() {
-        $this->http_output->setHeader('Content-Type', 'text/html; charset=UTF-8');
-        $start = getMillisecond();
-        $this->oss = $this->loader->task(OssTask::class,$this);
-        $size = filesize('/home/lee/pexels-photo-175773.jpeg');
-        $size = $size/1024/1024;
-        $res = $this->oss->uploadFile('sdossTest'.time(),'/home/lee/pexels-photo-175773.jpeg');
-        $this->ImageModel->insert($res);
-        $end = getMillisecond();
-        $time = $end - $start;
-        $this->http_output->end('图片大小 '.$size.'M------耗时 '.$time."  ms ------图片地址 :" .$res);
+        $this->context['request_method'] = $this->http_input->getRequestMethod();
+        $this->setContext($this->context);
+        if ($this->http_input->getRequestMethod() == 'GET') {
+            $this->http_output->setHeader('Content-Type', 'text/html; charset=UTF-8');
+            $tpl = $this->loader->view('app::oss');
+            $this->http_output->end($tpl);
+        }
+        if ($this->http_input->getRequestMethod() == 'POST') {
+            $start = getMillisecond();
+            $this->oss = $this->loader->task(OssTask::class, $this);
+            $file = $this->http_input->getFiles();
+            //$file = $this->http_input->getRawContent();
+            secho('file',$file);
+            $file = $file['userfile']['tmp_name'];
+            $size = filesize($file);
+            $size = $size / 1024 / 1024;
+            $res = $this->oss->uploadFile('sdossTest' . time(), $file);
+            $this->ImageModel->insert($res);
+            $end = getMillisecond();
+            $time = $end - $start;
+            $this->end('图片大小 ' . $size . 'M------耗时 ' . $time . "  ms ------图片地址 :" . $res);
+        }
 
     }
 
@@ -280,6 +305,19 @@ class AppController extends Controller
         secho('oss2---',$res);
         $this->http_output->end('图片大小 '.$size.'M------耗时 '.$time."  ms ------图片地址 :" .$res);
 
+    }
+
+    public function http_raw()
+    {
+        $raw = $this->http_input->getRawContent();
+        secho('raw---',$raw);
+        $this->http_output->end($raw);
+    }
+
+    public function http_set()
+    {
+        $res = $this->config->get('server','获取不到server配置文件');
+        $this->end($res);
     }
 
     public function http_ex1()
@@ -385,58 +423,19 @@ class AppController extends Controller
         $this->http_output->end($all);
     }
 
-    public function http_hr()
+    public function http_ip()
     {
-        $codes = '019&029&089&123&124';
-        $count = 5;
-        $times = 5;
-        $money = 0.5;
-        $desc = '[后三直选_单式] 019|029|089|123|124';
-        $qishu = date('Ymd',time()).'-055';
-        $json = [
-            'type' => 'input',
-            'methodid' => 11,
-            'codes' => $codes,//019&029&089&123&124
-            'zip' => 0,
-            'nums' => $count,
-            'times' => $times,
-            'money' => $money,//单位元
-            'mode' => 3,
-            'point' => 0,
-            'desc' => $desc,//[后三直选_单式] 019|029|089|123|124
-            'curtimes' => time().rand(100,999)
-        ];
-        $data = [
-            'mainForm' => 'mainForm',
-            'lotteryid' => 1,
-            'flag' => 'save',
-            'lt_sel_times' => 1,
-            'lt_sel_modes' => 3,
-            'lt_sel_dyprize' => '1940|0',
-            'lt_project[]' => json_encode($json),
-            'lt_issue_start' => $qishu,//
-            'lt_total_nums' => $count,//
-            'lt_total_money' => 0.5,//单位元
-            'lt_trace_times_margin' => 1,
-            'lt_trace_margin' => 50,
-            'lt_trace_times_same' => 1,
-            'lt_trace_diff' => 1,
-            'lt_trace_times_diff' => 2,
-            'lt_trace_count_input' => 10,
-            'lt_trace_money' => 0
-        ];
-        $cookie = [
-            'JSESSIONID' => 'E68073FA4DB58E5C8FBA21F90C06BF85',
-            'modes' => 3,
-            'dypoint' => 0
-        ];
+        $ip = swoole_get_local_ip();
+        $this->end($ip);
+    }
 
-        $response = $this->hr->httpClient
-            ->setMethod('post')
-            ->setCookies($cookie)
-            ->setData($data)
-            ->coroutineExecute('/LotteryService.aspx');
-        secho('response',$response);
-        $this->http_output->end($response);
+    public function http_sendFile()
+    {
+        $file = '/home/lee/oss.png';
+        $file = 'home/lee/swoole.xlsx';
+        $this->response->header('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        $this->response->header('Content-Disposition', 'attachment;filename="swoole.xlsx"');
+        $this->response->header('Cache-Control','max-age=0');
+        $this->response->sendfile($file);
     }
 }
