@@ -1,6 +1,7 @@
 <?php
 namespace app\Tasks;
 
+use app\Exception\BlueWarningException;
 use Server\CoreBase\Task;
 use Server\Start;
 
@@ -20,6 +21,7 @@ class AppTask extends Task
 		}
     }
     public function err() {
-        return $res;
+        throw new BlueWarningException('hahahhahahahhahahahhahahha');
     }
+
 }

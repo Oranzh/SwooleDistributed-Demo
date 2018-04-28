@@ -37,7 +37,6 @@ class BaseController extends Controller
     protected function getLogined()
     {
         $token = $this->getToken();
-        secho('token',$token);
         $info = $this->user->getInfo($token);
         if (empty($info)) throw new BlueWarningException('需要登录');
         return $info;

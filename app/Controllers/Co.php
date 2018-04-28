@@ -108,5 +108,30 @@ class Co extends BaseController
         return $string;
     }
 
+    public function http_task()
+    {
+        $task = $this->loader->task(AppTask::class);
+        $task->err();
+        $this->end(123);
+    }
+
+    public function http_ex()
+    {
+        $col = function (){};
+        $res = serialize($col);
+        $this->end('ok');
+    }
+
+    public function http_hi()
+    {
+        $this->end(123);
+    }
+
+    public function http_conf()
+    {
+        $port = get_instance()->config->get('mailer.port');
+        $this->end($port);
+    }
+
 
 }

@@ -17,6 +17,7 @@ class MyAMQPTaskProcess extends AMQPTaskProcess
 
     public function start($process)
     {
+        parent::start($process);
         $this->createDirectConsume('msgs');
     }
 
@@ -28,5 +29,10 @@ class MyAMQPTaskProcess extends AMQPTaskProcess
     protected function route($body)
     {
         return TestAMQPTask::class;
+    }
+
+    protected function onShutDown()
+    {
+        // TODO: Implement onShutDown() method.
     }
 }

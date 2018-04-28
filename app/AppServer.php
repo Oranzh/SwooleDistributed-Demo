@@ -10,6 +10,7 @@ use Server\Asyn\Redis\RedisAsynPool;
 use Server\Asyn\Mysql\MysqlAsynPool;
 use app\Process\MyProcess;
 use Server\Asyn\HttpClient\HttpClientPool;
+use app\Process\MyAMQPTaskProcess;
 
 /**
  * Created by PhpStorm.
@@ -74,9 +75,10 @@ class AppServer extends SwooleDistributedServer
     public function startProcess()
     {
         parent::startProcess();
-        for ($i = 1;$i <= 5 ; $i++) {
-            ProcessManager::getInstance()->addProcess(MyProcess::class,'my_process'.$i);
-        }
+//            for ($i=0;$i<5;$i++)
+//            {
+//                ProcessManager::getInstance()->addProcess(MyAMQPTaskProcess::class,'my_process'.$i);
+//            }
     }
 
     /**
