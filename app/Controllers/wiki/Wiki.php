@@ -74,9 +74,13 @@ class Wiki extends BaseController
     {
         $qrcode = new Qrcode(250,'hello,this is sd framework','UTF-8');
         $url = $qrcode->getUrl();
-//        $url = file_get_contents($url);
-//        $url = $this->oss->uploadFileByContent('qrcode',$url);
         $this->http_output->end($url);
+    }
+
+    public function http_qrcode2()
+    {
+        $url = 'http://qrcoder.sinaapp.com?t=hello,this is sd';
+
     }
 
     /*
@@ -96,4 +100,8 @@ class Wiki extends BaseController
         throw new BlueFatalException('这条是fatal');
     }
 
+    public function http_123()
+    {
+        $this->end(12);
+    }
 }
