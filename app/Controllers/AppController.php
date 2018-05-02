@@ -66,6 +66,13 @@ class AppController extends BaseController
         $this->http_output->end(123);
     }
 
+    public function http_getIp()
+    {
+        var_dump($this->http_input->getAllHeader());
+        $header = $this->http_input->getRequestHeader('x-forwarded-for');
+        $this->end($header);
+    }
+
     public function http_setcookie()
     {
         $cookie = $this->http_input->get('cookie');
