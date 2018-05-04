@@ -61,6 +61,10 @@ class BaseController extends Controller
         $this->http_output->end($end, $gzip);
     }
 
+    protected function isGet() {
+        return ($this->http_input->getRequestMethod() === 'GET') ? TRUE : FALSE;
+    }
+
 
     /**
      * 程序出错,发送日志到钉钉,不显示在客户端

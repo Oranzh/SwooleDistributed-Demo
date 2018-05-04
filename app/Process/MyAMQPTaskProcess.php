@@ -18,7 +18,7 @@ class MyAMQPTaskProcess extends AMQPTaskProcess
     public function start($process)
     {
         parent::start($process);
-        $this->createDirectConsume('msgs');
+        $this->createDirectConsume('hello');
     }
 
     /**

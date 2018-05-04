@@ -75,10 +75,10 @@ class AppServer extends SwooleDistributedServer
     public function startProcess()
     {
         parent::startProcess();
-//            for ($i=0;$i<5;$i++)
-//            {
-//                ProcessManager::getInstance()->addProcess(MyAMQPTaskProcess::class,'my_process'.$i);
-//            }
+//        for ($i=0;$i<5;$i++)
+//        {
+//            ProcessManager::getInstance()->addProcess(MyAMQPTaskProcess::class,'my_process'.$i);
+//        }
     }
 
     /**

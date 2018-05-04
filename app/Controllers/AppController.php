@@ -2,6 +2,7 @@
 
 namespace app\Controllers;
 
+use app\Exception\BlueWarningException;
 use app\Models\AppModel;
 use app\Models\ImageModel;
 use oranzh\Oranzh;
@@ -68,9 +69,8 @@ class AppController extends BaseController
 
     public function http_getIp()
     {
-        var_dump($this->http_input->getAllHeader());
         $header = $this->http_input->getRequestHeader('x-forwarded-for');
-        $this->end($header);
+        throw new BlueWarningException('this is blue');
     }
 
     public function http_setcookie()

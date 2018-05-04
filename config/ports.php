@@ -12,8 +12,8 @@ $config['ports'][] = [
     'socket_type' => PortManager::SOCK_TCP,
     'socket_name' => '0.0.0.0',
     'socket_port' => 9091,
-    'pack_tool' => 'LenJsonPackApp',
-    'route_tool' => 'NormalRouteApp',
+    'pack_tool' => 'LenJsonPack',
+    'route_tool' => 'NormalRoute',
     'middlewares' => ['MonitorMiddleware']
 ];
 $config['ports'][] = [
@@ -44,8 +44,8 @@ $config['ports'][] = [
 	//'socket_ssl' => true,
     'ssl_cert_file' => '/home/lee/sd/cert/214392470520546.crt',
     'ssl_key_file' => '/home/lee/sd/cert/214392470520546.key',
-    'route_tool' => 'N',
-    'pack_tool' => 'N',
+    'route_tool' => 'NormalRoute',
+    'pack_tool' => 'NonJsonPack',
     'opcode' => PortManager::WEBSOCKET_OPCODE_TEXT,
     'middlewares' => ['MonitorMiddleware', 'NormalHttpMiddleware']
 ];
