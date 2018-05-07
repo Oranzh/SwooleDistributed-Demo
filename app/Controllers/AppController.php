@@ -445,4 +445,26 @@ class AppController extends BaseController
         $this->response->header('Cache-Control','max-age=0');
         $this->response->sendfile($file);
     }
+
+    public function http_os()
+    {
+        $iPod    = stripos($this->http_input->server('http_user_agent'),"iPod");
+        $iPhone  = stripos($this->http_input->server('http_user_agent'),"iPhone");
+        $iPad    = stripos($this->http_input->server('http_user_agent'),"iPad");
+        $Android = stripos($this->http_input->server('http_user_agent'),"Android");
+        $webOS   = stripos($this->http_input->server('http_user_agent'),"webOS");
+        $res = '';
+        if( $iPod || $iPhone ){
+            $res = 'ipod or iphone';
+        }else if($iPad){
+            $res = 'ipad';
+        }else if($Android){
+            $res = 'Android';
+        }else if($webOS){
+            $res = 'webOs';
+        }else{
+            $res = 'unknow';
+        }
+        $this->end($res);
+    }
 }
