@@ -121,7 +121,7 @@ class AppServer extends SwooleDistributedServer
     {
         $this->templateEngine = new Blade($this->cachePath);
         $this->templateEngine->addNamespace("server", SERVER_DIR . '/Views');
-        $this->templateEngine->addNamespace("app", APP_DIR . '../..'.'/tpl');
+        $this->templateEngine->addNamespace("app", TPL_DIR);
         $this->templateEngine->addExtension('tpl','blade');
     }
 
