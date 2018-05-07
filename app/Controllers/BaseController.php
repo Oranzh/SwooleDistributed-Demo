@@ -82,4 +82,10 @@ class BaseController extends Controller
             }
         });
     }
+
+    public function getView()
+    {
+        $tpl = $this->http_input->getPathInfo();
+        return 'app::page'.strtolower($tpl).'/main';
+    }
 }

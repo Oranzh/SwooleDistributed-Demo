@@ -25,7 +25,7 @@ class Blade extends BaseController
     public function http_demo1()
     {
         if ($this->isGet()) {
-            $tpl = $this->loader->view('app::page/blade/demo1/main',[]);
+            $tpl = $this->loader->view($this->getView(),[]);
             $this->http_output->end($tpl);
             $this->interrupt();
         }
