@@ -28,21 +28,22 @@ class Wiki extends BaseController
     protected $oss;
     protected $ssc;
     protected $hr;
+    public $db;
     public function __construct($proxy = ChildProxy::class)
     {
         parent::__construct($proxy);
-        $this->test = get_instance()->getAsynPool("test");
-        $this->ssc = get_instance()->getAsynPool("ssc");
-        $this->hr = get_instance()->getAsynPool("hr");
+//        $this->test = get_instance()->getAsynPool("test");
+//        $this->ssc = get_instance()->getAsynPool("ssc");
+//        $this->hr = get_instance()->getAsynPool("hr");
     }
 
     protected function initialization($controller_name, $method_name)
     {
         parent::initialization($controller_name, $method_name);
-        if ($this->test != null) {
-            $this->installMysqlPool($this->test);
-        }
-        $this->oss = $this->loader->task(OssTask::class);
+//        if ($this->test != null) {
+//            $this->installMysqlPool($this->test);
+//        }
+//        $this->oss = $this->loader->task(OssTask::class);
     }
 
 
@@ -77,31 +78,29 @@ class Wiki extends BaseController
         $this->http_output->end($url);
     }
 
-    public function http_qrcode2()
-    {
-        $url = 'http://qrcoder.sinaapp.com?t=hello,this is sd';
+    /**
+     * 主要更新，优化了loader机制和mysql
+    1.使用mysql，redis，不再需要以前的方法获取了，现在统一用loader。
+    $this->db = $this->loader->mysql("mysqlPool",$this);
+    $this->redis = $this->loader->redis("redisPool");
+    2.begin开始事务后，回调中调用modle方法也会当作事务处理。
 
-    }
-
-    /*
-     * 测试钉钉机器人日志,请勿一直请求
+    $this->db->begin(function (){ $this->MTest->test();
+    $this->MTest->test2();
+    });
      */
-    public function http_throw()
+    public function http_db()
     {
-        $this->http_outpt->end($res);
+        $this->db = $this->loader->mysql("mysqlPool",$this);
+        $data = [
+            'user_name' => 'lee123'.rand(1000,9999),
+            'emails' => 'oranzh.cc@gmail.com',
+        ];
+        $res = $this->db->insert('users')->set($data)->query();
+        $msg = $res->getResult();
+        $this->end($msg);
+
     }
 
-    public function http_warning()
-    {
-        throw new BlueWarningException('这条是warning');
-    }
-    public function http_fatal()
-    {
-        throw new BlueFatalException('这条是fatal');
-    }
-
-    public function http_123()
-    {
-        $this->end(12);
-    }
+    
 }

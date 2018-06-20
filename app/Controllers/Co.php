@@ -3,6 +3,7 @@
 namespace app\Controllers;
 
 use app\Models\AppModel;
+use app\Models\wiki\Ssc;
 use app\Tasks\AppTask;
 use Server\CoreBase\ChildProxy;
 
@@ -124,13 +125,21 @@ class Co extends BaseController
 
     public function http_hi()
     {
-        $this->end(123);
+		$time = date('Y-m-d H:i:s',time());
+        $this->end($time);
     }
 
     public function http_conf()
     {
         $port = get_instance()->config->get('mailer.port');
         $this->end($port);
+    }
+
+    public function http_ssc()
+    {
+        $ssc = $this->loader->model(Ssc::class,$this);
+        $res = $ssc->api2();
+        $this->end($res);
     }
 
 

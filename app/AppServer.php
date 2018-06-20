@@ -64,6 +64,7 @@ class AppServer extends SwooleDistributedServer
         $this->addAsynPool('ssc',new HttpClientPool($this->config,'http://f.apiplus.net'));
         $this->addAsynPool('sscquick',new HttpClientPool($this->config,'http://t.apiplus.net/'));
         $this->addAsynPool('xluob',new HttpClientPool($this->config,'http://qa.xluob.com:8080'));
+        $this->addAsynPool('xluob2',new HttpClientPool($this->config,'http://www.xluob.com'));
         $this->addAsynPool('hr',new HttpClientPool($this->config,'http://www.hrppq.net'));
         $this->addAsynPool('alicdn',new HttpClientPool($this->config,'https://gosspublic.alicdn.com'));
         $this->addAsynPool('bus',new MysqlAsynPool($this->config, 'bus'));
@@ -77,7 +78,7 @@ class AppServer extends SwooleDistributedServer
         parent::startProcess();
 //        for ($i=0;$i<5;$i++)
 //        {
-//            ProcessManager::getInstance()->addProcess(MyAMQPTaskProcess::class,'my_process'.$i);
+//            ProcessManager::getInstance()->addProcess(MyAMQPTaskProcess::class,$i);
 //        }
     }
 

@@ -26,21 +26,21 @@ class BaseController extends Controller
     protected function initialization($controller_name, $method_name)
     {
         parent::initialization($controller_name, $method_name);
-        $this->user = $this->loader->model(User::class, $this);
+        //$this->user = $this->loader->model(User::class, $this);
     }
 
-    protected function getToken()
-    {
-        return $this->http_input->getPost('_t');
-    }
-
-    protected function getLogined()
-    {
-        $token = $this->getToken();
-        $info = $this->user->getInfo($token);
-        if (empty($info)) throw new BlueWarningException('需要登录');
-        return $info;
-    }
+//    protected function getToken()
+//    {
+//        return $this->http_input->getPost('_t');
+//    }
+//
+//    protected function getLogined()
+//    {
+//        $token = $this->getToken();
+//        $info = $this->user->getInfo($token);
+//        if (empty($info)) throw new BlueWarningException('需要登录');
+//        return $info;
+//    }
 
     /**
      * @param $output

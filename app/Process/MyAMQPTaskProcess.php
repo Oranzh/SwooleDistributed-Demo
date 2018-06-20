@@ -18,7 +18,14 @@ class MyAMQPTaskProcess extends AMQPTaskProcess
     public function start($process)
     {
         parent::start($process);
-        $this->createDirectConsume('hello');
+        //获取一个channel
+        $channel = $this->connection->channel();
+        //创建一个队列
+        $channel->queue_declare("msgs");
+        //框架默认提供的路由，也可以自己写
+        $this->createDirectConsume($channel,'msgs');
+        //等待所有的channel
+        $this->connection->waitAllChannel();
     }
 
     /**
