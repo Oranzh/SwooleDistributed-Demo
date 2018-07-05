@@ -8,6 +8,7 @@
 
 namespace app\Controllers;
 
+use app\Exception\BlueFatalException;
 use Server\CoreBase\Controller;
 use Server\CoreBase\ChildProxy;
 use Server\SwooleMarco;
@@ -16,8 +17,6 @@ use app\Exception\BlueWarningException;
 
 class BaseController extends Controller
 {
-    public $user;
-
     public function __construct($proxy = ChildProxy::class)
     {
         parent::__construct($proxy);
@@ -26,7 +25,7 @@ class BaseController extends Controller
     protected function initialization($controller_name, $method_name)
     {
         parent::initialization($controller_name, $method_name);
-        //$this->user = $this->loader->model(User::class, $this);
+
     }
 
 //    protected function getToken()
@@ -71,7 +70,39 @@ class BaseController extends Controller
      */
     public function onExceptionHandle(\Throwable $e, $handle = null)
     {
-        parent::onExceptionHandle($e, function (\Throwable $e) {
+        //必须的代码
+        if ($e instanceof SwooleRedirectException) {
+            $this->http_output->setStatusHeader($e->getCode());
+            $this->http_output->setHeader('Location', $e->getMessage());
+            $this->http_output->end('end');
+            return;
+        }
+        //中断信号
+        if ($e instanceof SwooleInterruptException) {
+            return;
+        }
+        if ($e instanceof SwooleException) {
+            secho("EX", "--------------------------[报错指南]----------------------------" . date("Y-m-d h:i:s"));
+            secho("EX", "异常消息：" . $e->getMessage());
+            print_context($this->getContext());
+            secho("EX", "--------------------------------------------------------------");
+        }
+        $this->context['error_message'] = $e->getMessage();
+        //如果是HTTP传递request过去
+        if ($this->request_type == SwooleMarco::HTTP_REQUEST) {
+            $e->request = $this->request;
+        }
+        //生成错误数据页面
+        $error_data = get_instance()->getWhoops()->handleException($e);
+        if ($this->isEnableError) {
+            try {
+                if ($e instanceof BlueFatalException) $this->Error->push($e->getMessage(),$error_data);
+            } catch (Throwable $e) {
+            }
+        }
+
+        //可以重写的代码
+        if ($handle == null) {
             switch ($this->request_type) {
                 case SwooleMarco::HTTP_REQUEST:
                     $this->end($e->getMessage(), 1);
@@ -80,7 +111,9 @@ class BaseController extends Controller
                     $this->send($e->getMessage());
                     break;
             }
-        });
+        } else {
+            sd_call_user_func($handle, $e);
+        }
     }
 
     public function getView()

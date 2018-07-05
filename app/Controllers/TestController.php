@@ -44,11 +44,12 @@ class TestController extends Controller
      * @var SdTcpRpcPool
      */
     public $sdrpc;
+
     public function __construct($proxy = ChildProxy::class)
     {
         parent::__construct($proxy);
-        $this->redis = get_instance()->getAsynPool("redisPool");
-        $this->mysql = get_instance()->getAsynPool("mysqlPool");
+        $this->redis = $this->loader->redis("redisPool");
+        $this->db = $this->loader->mysql("mysqlPool",$this);
     }
 
     public function http_sendEmail() {

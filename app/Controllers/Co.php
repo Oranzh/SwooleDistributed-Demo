@@ -37,7 +37,8 @@ class Co extends BaseController
 
     public function http_echo()
     {
-        $this->end('ok');
+        $path = $this->http_input->getPathInfo();
+        $this->end($path);
     }
 
     public function http_taskErr()
