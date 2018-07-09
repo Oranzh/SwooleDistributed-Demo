@@ -2,7 +2,7 @@
 //错误收集上报系统
 $config['error']['enable'] = true;
 //访问地址，需自己设置ip：port
-$config['error']['url'] = "Http://xiaohui.li:8081/Error";
+$config['error']['url'] = "https://www.xiaohui.li/Error";
 $config['error']['redis_prefix'] = '@sd-error_';
 $config['error']['redis_timeOut'] = '36000';
 $config['error']['dingding_enable'] = true;
