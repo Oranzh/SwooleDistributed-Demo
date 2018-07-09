@@ -11,9 +11,11 @@ namespace app\Controllers;
 use app\Exception\BlueFatalException;
 use Server\CoreBase\Controller;
 use Server\CoreBase\ChildProxy;
+use Server\CoreBase\SwooleInterruptException;
 use Server\SwooleMarco;
 use app\Models\bus\User;
 use app\Exception\BlueWarningException;
+use Respect\Validation\Exceptions\ValidationException;
 
 class BaseController extends Controller
 {
@@ -87,6 +89,8 @@ class BaseController extends Controller
             print_context($this->getContext());
             secho("EX", "--------------------------------------------------------------");
         }
+
+
         $this->context['error_message'] = $e->getMessage();
         //如果是HTTP传递request过去
         if ($this->request_type == SwooleMarco::HTTP_REQUEST) {
@@ -96,7 +100,11 @@ class BaseController extends Controller
         $error_data = get_instance()->getWhoops()->handleException($e);
         if ($this->isEnableError) {
             try {
-                if ($e instanceof BlueFatalException) $this->Error->push($e->getMessage(),$error_data);
+                if ($e instanceof ValidationException or $e instanceof BlueWarningException or $e instanceof SwooleInterruptException) {
+
+                } else {
+                    $this->Error->push($e->getMessage(),$error_data);
+                }
             } catch (Throwable $e) {
             }
         }
