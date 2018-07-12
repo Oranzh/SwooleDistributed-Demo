@@ -10,7 +10,6 @@ use Server\Asyn\Redis\RedisAsynPool;
 use Server\Asyn\Mysql\MysqlAsynPool;
 use app\Process\MyProcess;
 use Server\Asyn\HttpClient\HttpClientPool;
-use app\Process\MyAMQPTaskProcess;
 
 /**
  * Created by PhpStorm.
@@ -37,6 +36,7 @@ class AppServer extends SwooleDistributedServer
     public function onOpenServiceInitialization()
     {
         parent::onOpenServiceInitialization();
+        $this->templateEngine->addNamespace("app", TPL_DIR);
         $this->templateEngine->addExtension('tpl','blade');
     }
 
@@ -54,7 +54,6 @@ class AppServer extends SwooleDistributedServer
         }
         if ($this->config->get('mysql.enable', true)) {
             $this->asynPools['mysqlPool'] = new MysqlAsynPool($this->config, $this->config->get('mysql.active'));
-            $this->addAsynPool('test',new MysqlAsynPool($this->config, 'test'));
         }
         $this->redis_pool = $this->asynPools['redisPool'] ?? null;
         $this->mysql_pool = $this->asynPools['mysqlPool'] ?? null;
@@ -67,7 +66,6 @@ class AppServer extends SwooleDistributedServer
         $this->addAsynPool('xluob2',new HttpClientPool($this->config,'http://www.xluob.com'));
         $this->addAsynPool('hr',new HttpClientPool($this->config,'http://www.hrppq.net'));
         $this->addAsynPool('alicdn',new HttpClientPool($this->config,'https://gosspublic.alicdn.com'));
-        $this->addAsynPool('bus',new MysqlAsynPool($this->config, 'bus'));
     }
 
     /**
@@ -76,10 +74,7 @@ class AppServer extends SwooleDistributedServer
     public function startProcess()
     {
         parent::startProcess();
-//        for ($i=0;$i<5;$i++)
-//        {
-//            ProcessManager::getInstance()->addProcess(MyAMQPTaskProcess::class,$i);
-//        }
+        ProcessManager::getInstance()->addProcess(MyProcess::class);
     }
 
     /**
@@ -118,13 +113,13 @@ class AppServer extends SwooleDistributedServer
     /**
      * 设置模板引擎
      */
-    public function setTemplateEngine()
-    {
-        $this->templateEngine = new Blade($this->cachePath);
-        $this->templateEngine->addNamespace("server", SERVER_DIR . '/Views');
-        $this->templateEngine->addNamespace("app", TPL_DIR);
-        $this->templateEngine->addExtension('tpl','blade');
-    }
+//    public function setTemplateEngine()
+//    {
+//        $this->templateEngine = new Blade($this->cachePath);
+//        $this->templateEngine->addNamespace("server", SERVER_DIR . '/Views');
+//        $this->templateEngine->addNamespace("app", TPL_DIR);
+//        $this->templateEngine->addExtension('tpl','blade');
+//    }
 
 
 

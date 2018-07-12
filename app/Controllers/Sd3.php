@@ -13,6 +13,9 @@ use app\Exception\BlueFatalException;
 use app\Exception\BlueWarningException;
 use app\Models\service\MysqlService;
 use Server\CoreBase\ChildProxy;
+use Server\Components\Process\ProcessManager;
+use app\Process\MyProcess;
+
 
 class Sd3 extends BaseController
 {
@@ -129,4 +132,53 @@ class Sd3 extends BaseController
         throw new BlueFatalException('fatal error');
     }
 
+
+
+    /**
+     * 测试process
+     */
+    public function http_processRedis()
+    {
+        $res = ProcessManager::getInstance()->getRpcCall(MyProcess::class)->redis();
+        $this->end($res);
+	}
+    public function http_processMysql()
+    {
+        $res = ProcessManager::getInstance()->getRpcCall(MyProcess::class)->mysql();
+        $this->end($res);
+    }
+
+    public function http_processService()
+    {
+        $res = ProcessManager::getInstance()->getRpcCall(MyProcess::class)->service();
+        $this->end($res);
+    }
+
+    public function http_transferParam()
+    {
+        $res = ProcessManager::getInstance()->getRpcCall(MyProcess::class)->transferParam('123123');
+        $this->end($res);
+    }
+
+    /**
+     * 进程RPC代理类,将会访问代理的public test方法
+     */
+    public function http_processProxy()
+    {
+        $res = ProcessManager::getInstance()->getRpcCall(MyProcess::class)->test();
+        $this->end($res);
+    }
+
+    /**
+     * 代理类可以添加@oneWay注解，包含这个注解的方法进行RPC的时候将会被当做oneway处理。
+     * 注意不会有返回值，即使有返回值，也不会有；
+     */
+    public function http_oneway()
+    {
+        $res = ProcessManager::getInstance()->getRpcCall(MyProcess::class)->oneWay();
+        $this->end($res);
+    }
+
+
+    //TODO 测试AMQP
 }

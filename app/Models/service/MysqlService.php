@@ -44,6 +44,7 @@ class MysqlService extends Model
     public function update($data)
     {
         $res = $this->mysqlDao->update($data);
+        $res = $this->mysqlDao->update2();
         return $res;
     }
 

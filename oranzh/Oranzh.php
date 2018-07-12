@@ -14,4 +14,13 @@ class  Oranzh {
         secho( 'oranzh',  'namespace oranzh  class oranzh function test');
         return   'namespace oranzh  class oranzh function test';
     }
+
+    /**
+     * @oneWay
+     */
+    public function oneWay()
+    {
+        secho('oranzh','one way');
+        return 'oneway';
+    }
 }

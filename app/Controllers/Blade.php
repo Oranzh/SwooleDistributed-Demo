@@ -29,7 +29,8 @@ class Blade extends BaseController
             $this->http_output->end($tpl);
             $this->interrupt();
         }
-        var_dump($this->http_input->getAllPost());
-        $this->end('ok');
+        $res = $this->http_input->getAllPost();
+        //这里可以做数据处理
+        $this->end($res);//返回数据
     }
 }

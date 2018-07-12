@@ -13,7 +13,6 @@ use Server\CoreBase\Controller;
 use Server\CoreBase\ChildProxy;
 use Server\CoreBase\SwooleInterruptException;
 use Server\SwooleMarco;
-use app\Models\bus\User;
 use app\Exception\BlueWarningException;
 use Respect\Validation\Exceptions\ValidationException;
 
