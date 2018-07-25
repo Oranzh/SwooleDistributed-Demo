@@ -27,7 +27,7 @@ class Oss extends BaseController
         $this->setConfig();
     }
 
-    public function http_getConf()
+    public function http_perform()
     {
         $id = $this->ossConf['ak'];
         $key = $this->ossConf['sk'];

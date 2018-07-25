@@ -94,8 +94,8 @@ class MysqlDao extends  Model
         $res = $this->db->select('*')
             ->from($this->table)
             ->whereBetween('num',2,7)
-            ->query();
-        return $res->getResult();
+            ->query()->getResult();
+        return $res;
     }
 
     public function select()
@@ -118,6 +118,16 @@ class MysqlDao extends  Model
             ->andWhere('num',9)
             ->query();
         return $res->affected_rows();
+    }
+
+    public function selectOne($id)
+    {
+        $res = $this->db->select('*')
+            ->from($this->table)
+            ->where('id',$id)
+            ->query()
+            ->row();
+        return $res;
     }
 
 }

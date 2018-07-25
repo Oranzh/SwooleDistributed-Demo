@@ -93,4 +93,10 @@ class MysqlService extends Model
         $res = $this->mysqlDao->delete();
         if ($res ==0) throw new BlueWarningException('delete failed');
     }
+
+    public function selectOne($id)
+    {
+        $res = $this->mysqlDao->selectOne($id);
+        return $res;
+    }
 }

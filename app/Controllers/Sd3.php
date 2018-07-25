@@ -33,27 +33,6 @@ class Sd3 extends BaseController
         $this->mysqlService = $this->loader->model(MysqlService::class,$this);
     }
 
-    /**
-     * SD3测试
-     * sql测试
-     */
-    public function http_createTable()
-    {
-        $res = $this->mysqlService->createTable();
-        $this->end($res);
-    }
-
-    public function http_insert()
-    {
-        $data = [
-            'id' => 218,
-            'user_name' => 'leexiaohui',
-            'emails' => 'i@xiaohui.li',
-            'num' => 9,
-        ];
-        $this->mysqlService->insert($data);
-        $this->end('insert ok');
-    }
 
     public function http_update()
     {
@@ -112,6 +91,13 @@ class Sd3 extends BaseController
         $this->end('delete ok');
     }
 
+    public function http_one()
+    {
+        $id = $this->http_input->get('id');
+        $one = $this->mysqlService->selectOne($id);
+        $this->end($one);
+    }
+
 
     /**
      * 测试异常
@@ -136,6 +122,8 @@ class Sd3 extends BaseController
 
     /**
      * 测试process
+     * 关注下游执行结果,用RPC
+     * 不关注下午执行结果,用MQ,不用RPC
      */
     public function http_processRedis()
     {

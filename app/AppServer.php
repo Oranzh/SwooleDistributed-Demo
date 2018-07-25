@@ -9,7 +9,9 @@ use Server\Components\Process\ProcessManager;
 use Server\Asyn\Redis\RedisAsynPool;
 use Server\Asyn\Mysql\MysqlAsynPool;
 use app\Process\MyProcess;
+use app\Process\MyAMQPTaskProcess;
 use Server\Asyn\HttpClient\HttpClientPool;
+use Server\Asyn\AMQP\AMQP;
 
 /**
  * Created by PhpStorm.
@@ -36,8 +38,6 @@ class AppServer extends SwooleDistributedServer
     public function onOpenServiceInitialization()
     {
         parent::onOpenServiceInitialization();
-        $this->templateEngine->addNamespace("app", TPL_DIR);
-        $this->templateEngine->addExtension('tpl','blade');
     }
 
     /**
@@ -66,6 +66,21 @@ class AppServer extends SwooleDistributedServer
         $this->addAsynPool('xluob2',new HttpClientPool($this->config,'http://www.xluob.com'));
         $this->addAsynPool('hr',new HttpClientPool($this->config,'http://www.hrppq.net'));
         $this->addAsynPool('alicdn',new HttpClientPool($this->config,'https://gosspublic.alicdn.com'));
+        $this->addAsynPool('aliyuncs',new HttpClientPool($this->config,'https://sts.aliyuncs.com'));
+
+//        if($workerId==0) {
+//            $amqp = new AMQP('localhost',5672,'guest','guest');
+//            $channel = $amqp->channel();
+//            $channel->queue_declare('hhh',true, true,true,true);
+//            $channel->exchange_declare('router', 'direct', false, true, false);
+//            $channel->queue_bind('hhh', 'router');
+//            $channel->basic_consume('hhh', 'consumer', false, false, false, false, function (AMQPMessage $message)
+//            {
+//                echo "\n--------\n";
+//                echo $message->body;
+//                $message->delivery_info['channel']->basic_ack($message->delivery_info['delivery_tag']);
+//            });
+//        }
     }
 
     /**
@@ -75,6 +90,10 @@ class AppServer extends SwooleDistributedServer
     {
         parent::startProcess();
         ProcessManager::getInstance()->addProcess(MyProcess::class);
+//		for ($i=0;$i<5;$i++)
+//        {
+//            ProcessManager::getInstance()->addProcess(MyAMQPTaskProcess::class,$i);
+//        }
     }
 
     /**
@@ -113,13 +132,13 @@ class AppServer extends SwooleDistributedServer
     /**
      * 设置模板引擎
      */
-//    public function setTemplateEngine()
-//    {
-//        $this->templateEngine = new Blade($this->cachePath);
-//        $this->templateEngine->addNamespace("server", SERVER_DIR . '/Views');
-//        $this->templateEngine->addNamespace("app", TPL_DIR);
-//        $this->templateEngine->addExtension('tpl','blade');
-//    }
+    public function setTemplateEngine()
+    {
+        $this->templateEngine = new Blade($this->cachePath);
+        $this->templateEngine->addNamespace("server", SERVER_DIR . '/Views');
+        $this->templateEngine->addNamespace("app", TPL_DIR);
+        $this->templateEngine->addExtension('tpl','blade');
+    }
 
 
 

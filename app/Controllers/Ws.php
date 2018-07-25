@@ -20,40 +20,16 @@ use Server\CoreBase\SwooleException;
  */
 class Ws extends Controller
 {
-    /**
-     * @var AppModel
-     */
-    public $AppModel;
-    public $ImageModel;
-    protected $redis;
-    private $mysql;
-    protected $weixin;
-    protected $sd;
-    protected $oss;
+
     public function __construct($proxy = ChildProxy::class)
     {
         parent::__construct($proxy);
-        $this->redis = get_instance()->getAsynPool("redisPool");
-        $this->mysql = get_instance()->getAsynPool("mysqlPool");
-        $this->test = get_instance()->getAsynPool("test");
-        $this->weixin = get_instance()->getAsynPool("WeiXinAPI");
-        $this->weixinApi = get_instance()->getAsynPool("WeiXin");
 
     }
 
     protected function initialization($controller_name, $method_name)
     {
         parent::initialization($controller_name, $method_name);
-        if ($this->mysql != null) {
-            $this->installMysqlPool($this->mysql);
-        }
-        if ($this->sd != null) {
-            secho('sd','is not null');
-            $this->installMysqlPool($this->sd);
-        }
-        $this->AppModel = $this->loader->model('AppModel', $this);
-        $this->ImageModel = $this->loader->model('ImageModel', $this);
-        $this->redis = get_instance()->getAsynPool("redisPool");
     }
 
     /*
@@ -116,8 +92,8 @@ class Ws extends Controller
 //        {"controller_name":"Ws","method_name":"bind","uid":"sd_15"}
         $msg = [
             'controller_name' => 'Ws',
-            'method_name' => 'sub',
-            'sub' => 'first_topic'
+            'method_name' => 'bind',
+            'uid' => 'first_topic'
         ];
         $this->send($msg);
 

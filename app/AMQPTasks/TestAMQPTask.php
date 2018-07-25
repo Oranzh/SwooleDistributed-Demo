@@ -10,7 +10,6 @@ namespace app\AMQPTasks;
 
 use PhpAmqpLib\Message\AMQPMessage;
 use Server\Components\AMQPTaskSystem\AMQPTask;
-use Server\Models\TestModel;
 
 class TestAMQPTask extends AMQPTask
 {
@@ -22,7 +21,6 @@ class TestAMQPTask extends AMQPTask
     public function initialization(AMQPMessage $message)
     {
         parent::initialization($message);
-        $this->TestModel = $this->loader->model(TestModel::class, $this);
     }
 
     /**

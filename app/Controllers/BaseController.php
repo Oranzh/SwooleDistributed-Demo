@@ -14,7 +14,8 @@ use Server\CoreBase\ChildProxy;
 use Server\CoreBase\SwooleInterruptException;
 use Server\SwooleMarco;
 use app\Exception\BlueWarningException;
-use Respect\Validation\Exceptions\ValidationException;
+use Respect\Validation\Exceptions\ExceptionInterface;
+use Respect\Validation\Validator as v;
 
 class BaseController extends Controller
 {
@@ -29,18 +30,6 @@ class BaseController extends Controller
 
     }
 
-//    protected function getToken()
-//    {
-//        return $this->http_input->getPost('_t');
-//    }
-//
-//    protected function getLogined()
-//    {
-//        $token = $this->getToken();
-//        $info = $this->user->getInfo($token);
-//        if (empty($info)) throw new BlueWarningException('需要登录');
-//        return $info;
-//    }
 
     /**
      * @param $output
@@ -88,9 +77,6 @@ class BaseController extends Controller
             print_context($this->getContext());
             secho("EX", "--------------------------------------------------------------");
         }
-
-
-        $this->context['error_message'] = $e->getMessage();
         //如果是HTTP传递request过去
         if ($this->request_type == SwooleMarco::HTTP_REQUEST) {
             $e->request = $this->request;
@@ -99,7 +85,7 @@ class BaseController extends Controller
         $error_data = get_instance()->getWhoops()->handleException($e);
         if ($this->isEnableError) {
             try {
-                if ($e instanceof ValidationException or $e instanceof BlueWarningException or $e instanceof SwooleInterruptException) {
+                if ($e instanceof ExceptionInterface or $e instanceof BlueWarningException or $e instanceof SwooleInterruptException) {
 
                 } else {
                     $this->Error->push($e->getMessage(),$error_data);
@@ -123,9 +109,12 @@ class BaseController extends Controller
         }
     }
 
-    public function getView()
+    public function getView(array $data=[])
     {
         $tpl = $this->http_input->getPathInfo();
-        return 'app::page'.strtolower($tpl).'/main';
+        $tpl = 'app::page'.strtolower($tpl).'/main';
+        $tpl = $this->loader->view($tpl,$data);
+        $this->http_output->end($tpl);
+        $this->interrupt();
     }
 }

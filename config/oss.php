@@ -12,6 +12,13 @@ $config['oss']['bucket'] = 'mahuateng';
 $config['oss']['cdn'] = 'mahuateng.oranzh.cc';
 $config['oss']['ns'] = 'image';
 $config['oss']['path'] = 'sd';
-$config['oss']['callback'] = 'http://oranzh.cc:8081/oss/callback';
+$config['oss']['callback'] = 'https://www.xiaohui.li/oss/callback';
+
+$config['oss']['sts']['REGION_ID'] = 'cn-beijing';
+$config['oss']['sts']['ENDPOINT'] = 'sts.cn-beijing.aliyuncs.com';
+$config['oss']['sts']['AccessKeyID'] = 'LTAIC6BLyPGyDeJn';
+$config['oss']['sts']['AccessKeySecret'] = 'HX8L7PZX5UDncuFDQEbcqBuMEXCWF8';
+$config['oss']['sts']['roleArn'] = 'acs:ram::1066731078576774:role/app';
+$config['oss']['sts']['RoleName'] = 'client_name';
 
 return $config;

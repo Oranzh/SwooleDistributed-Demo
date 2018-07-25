@@ -12,7 +12,7 @@ namespace app\Route;
 use Server\Route\IRoute;
 use Server\CoreBase\SwooleException;
 
-class N implements IRoute
+class Http implements IRoute
 {
     private $client_data;
 
@@ -29,8 +29,7 @@ class N implements IRoute
      */
     public function handleClientData($data)
     {
-        //secho('N-route',$data);
-        //var_dump($data);
+		secho('handleDate','123');
         $this->client_data = $data;
         if (isset($this->client_data->controller_name) && isset($this->client_data->method_name)) {
             return $this->client_data;
@@ -46,31 +45,20 @@ class N implements IRoute
      */
     public function handleClientRequest($request)
     {
-        $this->client_data->path = $request->server['path_info'];
+        secho('path_info',$request->server['path_info']);
+        $this->client_data->path = $request->server['path_info'].'/hello';
         $route = explode('/', $request->server['path_info']);
-        //secho('path_info',$request->server['path_info']);
-        ///wiki/Http/hello
-        //secho('route',$route);
-        /**
-        [
-            0 => '',
-            1 => 'wiki',
-            2 => 'Http',
-            3 => 'hello'
-        ]
-        **/
+		secho('route',$route);
         $count = count($route);
-//        if ($count == 2) {
-//            $this->client_data->controller_name = $route[$count - 1] ?? null;
-//            $this->client_data->method_name = null;
-//            return;
-//        }
-//        $this->client_data->method_name = $route[$count - 1] ?? null;
-        $this->client_data->method_name = 'perform';
-        //unset($route[$count - 1]);
-        $route[$count-1] = ucfirst($route[$count-1]);
-        unset($route[0]);
+        if ($count == 2) {
+            $this->client_data->controller_name = $route[$count - 1] ?? null;
+            $this->client_data->method_name = 'hello';
+            return;
+        }
+        $this->client_data->method_name = 'hello';
         $this->client_data->controller_name = implode("\\", $route);
+		secho('method_name',$this->client_data->method_name);	
+		secho('controller_name',$this->client_data->controller_name);	
     }
 
     /**
@@ -79,7 +67,7 @@ class N implements IRoute
      */
     public function getControllerName()
     {
-        //secho('getCname',$this->client_data->controller_name);
+		secho('getcontroller_name',$this->client_data->controller_name);	
         return $this->client_data->controller_name;
     }
 
@@ -89,22 +77,23 @@ class N implements IRoute
      */
     public function getMethodName()
     {
-        //secho('getMethod',$this->client_data->method_name);
+		secho('getmethod_name',$this->client_data->method_name);	
         return $this->client_data->method_name;
     }
 
     public function getPath()
     {
-        //secho('getpath',$this->client_data->path);
+		secho('getpath',$this->client_data->path);
         return $this->client_data->path ?? "";
     }
 
     public function getParams()
     {
+		secho('paramn',$this->client_data->params);
         return $this->client_data->params??null;
     }
 
-    public function errorHandle(\Throwable  $e, $fd)
+    public function errorHandle(\Throwable $e, $fd)
     {
         get_instance()->send($fd, "Error:" . $e->getMessage(), true);
         get_instance()->close($fd);
