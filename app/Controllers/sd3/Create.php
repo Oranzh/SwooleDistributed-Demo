@@ -37,6 +37,8 @@ class Create extends BaseController
         $params = $this->verify();
         $this->context['commit'] = $params;
         $this->cSd3Create->perform();
+        $this->context['insert_id'] = 217;
+        $this->redirectController('sd3','info');
         $this->end('添加成功');
     }
 

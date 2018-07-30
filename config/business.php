@@ -7,7 +7,7 @@
  */
 
 //强制关闭gzip
-$config['http']['gzip_off'] = false;
+$config['http']['gzip_off'] = true;
 
 //默认访问的页面
 $config['http']['index'] = 'index.html';

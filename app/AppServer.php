@@ -67,20 +67,8 @@ class AppServer extends SwooleDistributedServer
         $this->addAsynPool('hr',new HttpClientPool($this->config,'http://www.hrppq.net'));
         $this->addAsynPool('alicdn',new HttpClientPool($this->config,'https://gosspublic.alicdn.com'));
         $this->addAsynPool('aliyuncs',new HttpClientPool($this->config,'https://sts.aliyuncs.com'));
+        $this->addAsynPool('qq',new HttpClientPool($this->config,'https://ssl.captcha.qq.com'));
 
-//        if($workerId==0) {
-//            $amqp = new AMQP('localhost',5672,'guest','guest');
-//            $channel = $amqp->channel();
-//            $channel->queue_declare('hhh',true, true,true,true);
-//            $channel->exchange_declare('router', 'direct', false, true, false);
-//            $channel->queue_bind('hhh', 'router');
-//            $channel->basic_consume('hhh', 'consumer', false, false, false, false, function (AMQPMessage $message)
-//            {
-//                echo "\n--------\n";
-//                echo $message->body;
-//                $message->delivery_info['channel']->basic_ack($message->delivery_info['delivery_tag']);
-//            });
-//        }
     }
 
     /**
@@ -89,11 +77,7 @@ class AppServer extends SwooleDistributedServer
     public function startProcess()
     {
         parent::startProcess();
-        ProcessManager::getInstance()->addProcess(MyProcess::class);
-//		for ($i=0;$i<5;$i++)
-//        {
-//            ProcessManager::getInstance()->addProcess(MyAMQPTaskProcess::class,$i);
-//        }
+        //ProcessManager::getInstance()->addProcess(MyProcess::class);
     }
 
     /**

@@ -43,7 +43,7 @@ class StsConf extends BaseController
 		$request->setDurationSeconds(3600);
 		$response = $client->getAcsResponse($request);
 		$this->redis->set('stsconf',json_encode($response),3600);
-		$this->end($response);
+		$this->end($response,0,false);
     }
 
     private function getConf()

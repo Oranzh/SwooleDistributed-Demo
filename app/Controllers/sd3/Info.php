@@ -21,10 +21,19 @@ class Info extends BaseController
         $this->mysqlService = $this->loader->model(MysqlService::class,$this);
     }
 
+   public function setUp()
+   {
+       $this->needLogin();
+   }
+
     public function http_perform()
     {
-        $params = $this->verify();
+        //$params = $this->verify();
+        var_dump($this->context);
+        $params['id'] = $this->context['insert_id'] ?? 216;
         $info = $this->mysqlService->selectOne($params['id']);
+        secho('info',$this->context['logined']);
+        $this->http_output->setCookie('blue',\swoole_serialize::pack($this->context['logined']));
         $this->end($info);
     }
 

@@ -32,6 +32,8 @@ class Blade extends BaseController
             $this->getView($data);
         }
         $res = $this->http_input->getAllPost();
+        $res['ip'] = $this->http_input->header('x-real-ip');
+        $res['host'] = $this->http_input->header('host');
         //这里可以做数据处理
         $this->end($res);//返回数据
     }

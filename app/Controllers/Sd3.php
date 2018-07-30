@@ -59,6 +59,7 @@ class Sd3 extends BaseController
 
     public function http_in()
     {
+        $this->redirectController('Sd3','update2');
         $id = [
             216,
             217,

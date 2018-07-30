@@ -12,13 +12,15 @@ use app\Exception\BlueFatalException;
 use Server\CoreBase\Controller;
 use Server\CoreBase\ChildProxy;
 use Server\CoreBase\SwooleInterruptException;
+use Server\CoreBase\SwooleRedirectException;
 use Server\SwooleMarco;
 use app\Exception\BlueWarningException;
 use Respect\Validation\Exceptions\ExceptionInterface;
-use Respect\Validation\Validator as v;
+
 
 class BaseController extends Controller
 {
+    private $hookNeedLogin = false;
     public function __construct($proxy = ChildProxy::class)
     {
         parent::__construct($proxy);
@@ -27,9 +29,21 @@ class BaseController extends Controller
     protected function initialization($controller_name, $method_name)
     {
         parent::initialization($controller_name, $method_name);
-
+        $this->setUp();
     }
 
+    public function setUp()
+    {
+    }
+
+    public function needLogin()
+    {
+        secho('login','返回用户信息,如果没有让登陆去');
+        $this->context['logined'] = [
+            'name' => 'lee',
+            'tel' => 15249232349,
+        ];
+    }
 
     /**
      * @param $output
@@ -49,6 +63,7 @@ class BaseController extends Controller
         $end = json_encode($output, JSON_UNESCAPED_UNICODE);
         $this->http_output->end($end, $gzip);
     }
+
 
     protected function isGet() {
         return ($this->http_input->getRequestMethod() === 'GET') ? TRUE : FALSE;
@@ -85,7 +100,8 @@ class BaseController extends Controller
         $error_data = get_instance()->getWhoops()->handleException($e);
         if ($this->isEnableError) {
             try {
-                if ($e instanceof ExceptionInterface or $e instanceof BlueWarningException or $e instanceof SwooleInterruptException) {
+                //判断为跳转的时候不中断程序,要不无法跳转
+                if ($e instanceof ExceptionInterface or $e instanceof BlueWarningException or $e instanceof SwooleInterruptException or $e instanceof SwooleRedirectException) {
 
                 } else {
                     $this->Error->push($e->getMessage(),$error_data);

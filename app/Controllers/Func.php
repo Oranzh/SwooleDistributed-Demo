@@ -8,9 +8,9 @@
 
 namespace app\Controllers;
 
+use Server\CoreBase\Controller;
 
-
-class Func extends BaseController
+class Func extends Controller
 {
     public function __construct($proxy = ChildProxy::class)
     {
@@ -22,8 +22,9 @@ class Func extends BaseController
         parent::initialization($controller_name, $method_name);
     }
 
-    public function http_echo()
+    public function http_perform()
     {
+        $this->redirect('https://www.baidu.com');
         $this->http_output->end(123);
     }
 }
