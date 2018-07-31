@@ -1,0 +1,1 @@
+采用了YAF框架的controller-actions,拆分了较大的controller,使得代码更加清晰和易于管理
