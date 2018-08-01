@@ -29,6 +29,7 @@ class BaseController extends Controller
     protected function initialization($controller_name, $method_name)
     {
         parent::initialization($controller_name, $method_name);
+        if ($this->request_type == SwooleMarco::HTTP_REQUEST) $this->context['ip'] = $this->request->header['x-real-ip'];
         $this->setUp();
     }
 
@@ -38,7 +39,7 @@ class BaseController extends Controller
 
     public function needLogin()
     {
-        secho('login','返回用户信息,如果没有让登陆去');
+        //secho('login','返回用户信息,如果没有让登陆去');
         $this->context['logined'] = [
             'name' => 'lee',
             'tel' => 15249232349,
@@ -129,6 +130,7 @@ class BaseController extends Controller
     {
         $tpl = $this->http_input->getPathInfo();
         $tpl = 'app::page'.strtolower($tpl).'/main';
+		var_dump($tpl);
         $tpl = $this->loader->view($tpl,$data);
         $this->http_output->end($tpl);
         $this->interrupt();

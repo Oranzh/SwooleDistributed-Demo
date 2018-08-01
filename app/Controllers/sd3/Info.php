@@ -29,12 +29,12 @@ class Info extends BaseController
     public function http_perform()
     {
         //$params = $this->verify();
-        var_dump($this->context);
+        //var_dump($this->context);
         $params['id'] = $this->context['insert_id'] ?? 216;
         $info = $this->mysqlService->selectOne($params['id']);
-        secho('info',$this->context['logined']);
-        $this->http_output->setCookie('blue',\swoole_serialize::pack($this->context['logined']));
-        $this->end($info);
+        //secho('info',$this->context['logined']);
+        //$this->http_output->setCookie('blue',\swoole_serialize::pack($this->context['logined']));
+        $this->end($this->http_input->cookie('blue'));
     }
 
     private function verify()
