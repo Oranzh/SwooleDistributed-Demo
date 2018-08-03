@@ -27,10 +27,12 @@ class Upload extends  BaseController
 
     public function http_perform()
     {
-        $raw = $this->http_input->getAllPost();
-        print_r($raw);
-        $res['url'] = sprintf('https://img.oranzh.cc/%s',$raw['object']);
-        $this->end($res,0,false);
+//        $raw = $this->http_input->getAllPost();
+//        print_r($raw);
+//        $res['url'] = sprintf('https://img.oranzh.cc/%s',$raw['object']);
+//        $this->end($res,0,false);
+        $this->http_output->setCookie('blue','',time()-1);
+        $this->http_output->end('ok');
     }
 
 }

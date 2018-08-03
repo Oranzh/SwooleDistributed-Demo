@@ -21,8 +21,6 @@ class MysqlDao extends  Model
     public function __construct()
     {
         parent::__construct();
-        $this->db = $this->loader->mysql('mysqlPool',$this);
-        $this->redis = $this->loader->redis('redisPool');
     }
 
     public function initialization(&$context)
@@ -128,6 +126,7 @@ class MysqlDao extends  Model
             ->query()
             ->row();
         return $res;
+
     }
 
 }

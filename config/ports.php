@@ -44,9 +44,9 @@ $config['ports'][] = [
 	//'socket_ssl' => true,
     'ssl_cert_file' => '/home/lee/sd/cert/214392470520546.crt',
     'ssl_key_file' => '/home/lee/sd/cert/214392470520546.key',
-    'route_tool' => 'NormalRoute',
-    'pack_tool' => 'NonJsonPack',
-    'opcode' => PortManager::WEBSOCKET_OPCODE_TEXT,
+    'route_tool' => 'N',
+    'pack_tool' => 'Msgpack',
+    'opcode' => PortManager::WEBSOCKET_OPCODE_BINARY,
     'middlewares' => ['MonitorMiddleware', 'NormalHttpMiddleware']
 ];
 

@@ -29,8 +29,7 @@ class N implements IRoute
      */
     public function handleClientData($data)
     {
-        //secho('N-route',$data);
-        //var_dump($data);
+        //这块接收到的是对象，而不是数组，自己组装数据格式
         $this->client_data = $data;
         if (isset($this->client_data->controller_name) && isset($this->client_data->method_name)) {
             return $this->client_data;
@@ -50,7 +49,7 @@ class N implements IRoute
         $route = explode('/', $request->server['path_info']);
         //secho('path_info',$request->server['path_info']);
         ///wiki/Http/hello
-        //secho('route',$route);
+        secho('route',$route);
         /**
         [
             0 => '',
@@ -60,11 +59,11 @@ class N implements IRoute
         ]
         **/
         $count = count($route);
-//        if ($count == 2) {
-//            $this->client_data->controller_name = $route[$count - 1] ?? null;
-//            $this->client_data->method_name = null;
-//            return;
-//        }
+        if ($count == 2) {
+            $this->client_data->controller_name = ucfirst($route[$count - 1]) ?? null;
+            $this->client_data->method_name = 'perform';
+            return;
+        }
 //        $this->client_data->method_name = $route[$count - 1] ?? null;
         $this->client_data->method_name = 'perform';
         //unset($route[$count - 1]);

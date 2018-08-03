@@ -17,7 +17,7 @@ $config['aop'][] =
 $config['aop'][] =
     [
         "aspect_class" => "app\Aspects\BlueAspect",
-        "pointcut" => "app\Controllers\sd3\T*::*",
+        "pointcut" => "app\Controllers\sd3\*::*",
         "before_method" => "before",
         "after_method" => "after",
     ];

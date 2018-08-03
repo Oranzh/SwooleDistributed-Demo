@@ -17,6 +17,7 @@ use Server\CoreBase\Model;
 class MysqlService extends Model
 {
     private $mysqlDao;
+    protected $redis_table = 'users';
     public function __construct($proxy = ChildProxy::class)
     {
         parent::__construct($proxy);
@@ -96,7 +97,10 @@ class MysqlService extends Model
 
     public function selectOne($id)
     {
+        $tmp = $this->redis->hGet($this->redis_table,$id);
+        if ($tmp) return json_decode($tmp,true);
         $res = $this->mysqlDao->selectOne($id);
+        $this->redis->hSet($this->redis_table,$id,json_encode($res));
         return $res;
     }
 }

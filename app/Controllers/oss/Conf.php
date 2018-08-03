@@ -2,17 +2,15 @@
 /**
  * Created by PhpStorm.
  * User: leexiaohui(oranzh.cc@gmail.com)
- * Date: 2018/4/19
- * Time: 16:15
+ * Date: 2018/8/3
+ * Time: 9:30
  */
 
-namespace app\Controllers;
-
+namespace app\Controllers\oss;
+use app\Controllers\BaseController;
 use Server\CoreBase\ChildProxy;
-//use Server\CoreBase\Controller;
 
-
-class Oss extends BaseController
+class Conf extends BaseController
 {
     protected $ali;
     protected $ossConf;
@@ -27,7 +25,6 @@ class Oss extends BaseController
         parent::initialization($controller_name, $method_name);
         $this->setConfig();
     }
-
     public function http_perform()
     {
         $id = $this->ossConf['ak'];

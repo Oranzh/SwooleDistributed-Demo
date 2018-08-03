@@ -27,12 +27,15 @@ class Validate extends BaseController
 
     public function http_perform()
     {
+        $ticket = $this->http_input->getPost('ticket');
+        $randstr = $this->http_input->getPost('randstr');
+        $userIP = $this->http_input->header('x-real-ip');
         $data = [
             'aid' => 2094870261,
             'AppSecretKey' => '0805CswKSHB5KV-xDTN4oqw**',
-            'Ticket' => 't02sxTzyqPy2uszO1-aoJ8ekPJ51_2u-dDonHKk8zMzqF5PrXFTAJwUluNWldgSEXyfjRn5sIYTaTVBQX4e3rvPtIuzry-u1WffiB1xFdaAF_FmWKraZZI9Hg**',
-            'Randstr' => 'jklixj1568s1df35sDFS',
-            'UserIP' => '52.231.159.31'
+            'Ticket' => $ticket,
+            'Randstr' => $randstr,
+            'UserIP' => $userIP,
 
         ];
         $response = $this->qq->httpClient

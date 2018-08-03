@@ -39,11 +39,11 @@ class BaseController extends Controller
 
     public function needLogin()
     {
-        //secho('login','返回用户信息,如果没有让登陆去');
-        $this->context['logined'] = [
-            'name' => 'lee',
-            'tel' => 15249232349,
-        ];
+        if ($blue = $this->http_input->cookie('blue')) {
+
+        } else {
+            //throw new BlueWarningException('u need to login');
+        }
     }
 
     /**
@@ -130,7 +130,6 @@ class BaseController extends Controller
     {
         $tpl = $this->http_input->getPathInfo();
         $tpl = 'app::page'.strtolower($tpl).'/main';
-		var_dump($tpl);
         $tpl = $this->loader->view($tpl,$data);
         $this->http_output->end($tpl);
         $this->interrupt();
