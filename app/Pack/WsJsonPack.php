@@ -19,7 +19,6 @@ class WsJsonPack implements IPack
 
     public function pack($data, $topic = null)
     {
-        var_dump('wsjson---pack');
         if ($this->last_data != null && $this->last_data == $data) {
             return $this->last_data_result;
         }
@@ -30,10 +29,7 @@ class WsJsonPack implements IPack
 
     public function unPack($data)
     {
-        var_dump('wsjson---unpack');
         $value = json_decode($data);
-        var_dump($data);
-
         if (empty($value)) {
             throw new SwooleException('json unPack 失败');
         }
