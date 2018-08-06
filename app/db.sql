@@ -18,18 +18,17 @@ CREATE TABLE `ssc_neight` (
 
 ALTER TABLE `ssc` ADD COLUMN `ymd` CHAR(8) NOT NULL DEFAULT '';
 
-CREATE TABLE `user` (
+CREATE TABLE `passport` (
   `id` int(6) NOT NULL AUTO_INCREMENT,
-  `phone` char(20) NOT NULL DEFAULT '' COMMENT '手机号',
+  `name` VARCHAR (60)  COMMENT '昵称',
   `avatar` VARCHAR (128) NOT NULL DEFAULT '' COMMENT '头像',
-  `nickname` VARCHAR (60)  NULL DEFAULT '普通用户' COMMENT '昵称',
-  `passwd` VARCHAR (256) NOT NULL DEFAULT '',
-  `status` tinyint(1) NOT NULL,
+  `password` VARCHAR (256) NOT NULL DEFAULT '',
+  `status` tinyint(1) NOT NULL DEFAULT 0 ,
   `create_time` int(11) NOT NULL,
   `update_time` int(11) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY (`phone`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
+  UNIQUE KEY (`name`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COMMENT='用户表';
 
 
 CREATE TABLE `post` (

@@ -11,8 +11,9 @@ namespace app\Controllers\wss;
 use Server\CoreBase\Controller;
 use Server\CoreBase\ChildProxy;
 use app\Exception\BlueWarningException;
+use app\Controllers\BaseController;
 
-class Bind extends Controller
+class Bind extends BaseController
 {
     public function __construct($proxy = ChildProxy::class)
     {
@@ -27,12 +28,14 @@ class Bind extends Controller
 
     public function perform()
     {
-        var_dump('come here wss bind perform');
         $uid = $this->client_data->uid;
         $uid = 'websocket_'.$uid;
-        //if (!empty($this->uid)) throw new BlueWarningException('请勿重复绑定');
         $this->bindUid($uid);
-        $this->send('haha');
+        if ('websocket_5' == $uid) {
+            $this->send(['controller_name' => 'wss/Send','uid' => 'all' ,'content' => '所有用户的消息']);
+        } else {
+            $this->send('bind successfully');
+        }
 
     }
 }

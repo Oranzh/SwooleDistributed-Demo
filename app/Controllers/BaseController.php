@@ -29,7 +29,7 @@ class BaseController extends Controller
     protected function initialization($controller_name, $method_name)
     {
         parent::initialization($controller_name, $method_name);
-        if ($this->request_type == SwooleMarco::HTTP_REQUEST) $this->context['ip'] = $this->request->header['x-real-ip'];
+        if ($this->request->header['x-real-ip']) $this->context['ip'] = $this->request->header['x-real-ip'];
         $this->setUp();
     }
 
@@ -39,10 +39,12 @@ class BaseController extends Controller
 
     public function needLogin()
     {
-        if ($blue = $this->http_input->cookie('blue')) {
-
+        if ($tmp = $this->http_input->getPost('_t')) {
+            $sess = decode_aes($tmp['encrypted'],$tmp['hash_key'],true);
+            if ($sess['time'] + $sess['expire'] < time()) throw new BlueWarningException('需要登录');
+            $this->context['sess'] = $sess;
         } else {
-            //throw new BlueWarningException('u need to login');
+            throw new BlueWarningException('需要登录');
         }
     }
 

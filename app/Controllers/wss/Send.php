@@ -30,6 +30,9 @@ class Send extends Controller
     {
         $uid = 'websocket_'.$this->client_data->uid;
         $content = $this->client_data->content;
+        if ($this->client_data->uid == 'all') {
+            $this->sendToAll($content);
+        }
         $this->sendToUid($uid,$content);
     }
 }

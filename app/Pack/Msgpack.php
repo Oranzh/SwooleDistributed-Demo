@@ -37,6 +37,7 @@ class Msgpack implements IPack
         foreach ($value as $k => $v) {
             $res->$k = $v;
         }
+        $res->method_name = 'perform';
         return $res;
     }
 

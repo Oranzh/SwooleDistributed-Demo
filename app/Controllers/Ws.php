@@ -88,10 +88,8 @@ class Ws extends Controller
     public function onConnect()
     {
         get_instance()->protect($this->fd);
-//        {"controller_name":"Ws","method_name":"bind","uid":"sd_15"}
         $msg = [
             'controller_name' => 'wss/Bind',
-            'method_name' => 'perform',
             'uid' => '5'
         ];
         $this->send($msg);

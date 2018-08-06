@@ -33,7 +33,8 @@ class Info extends BaseController
         //var_dump($this->context);
         $params['id'] = $this->context['insert_id'] ?? 216;
         $info = $this->mysqlService->selectOne($params['id']);
-        $this->http_output->end($info);
+        $this->sendToUid('websocket_5','hellosd123');
+        $this->http_output->end($this->fd);
     }
 
     private function verify()

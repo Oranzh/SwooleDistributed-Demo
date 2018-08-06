@@ -12,6 +12,7 @@ use app\Process\MyProcess;
 use app\Process\MyAMQPTaskProcess;
 use Server\Asyn\HttpClient\HttpClientPool;
 use Server\Asyn\AMQP\AMQP;
+use Server\Asyn\TcpClient\SdTcpRpcPool;
 
 /**
  * Created by PhpStorm.
@@ -29,6 +30,7 @@ class AppServer extends SwooleDistributedServer
     {
         $this->setLoader(new Loader());
         parent::__construct();
+        $this->custom_handshake = true;
     }
 
     /**
@@ -68,6 +70,7 @@ class AppServer extends SwooleDistributedServer
         $this->addAsynPool('alicdn',new HttpClientPool($this->config,'https://gosspublic.alicdn.com'));
         $this->addAsynPool('aliyuncs',new HttpClientPool($this->config,'https://sts.aliyuncs.com'));
         $this->addAsynPool('qq',new HttpClientPool($this->config,'https://ssl.captcha.qq.com'));
+        $this->addAsynPool('ws',new SdTcpRpcPool($this->config,'ws','127.0.0.1:8083'));
 
     }
 
@@ -87,6 +90,10 @@ class AppServer extends SwooleDistributedServer
      */
     public function onWebSocketHandCheck(HttpInput $httpInput)
     {
+        $tmp = $httpInput->get('_t');
+//        if (empty($tmp)) return false;
+//        $passport = decode_aes($tmp['encrypted'],$tmp['hash_key'],true);
+//        if (!isset($passport['id']) or $this->coroutineUidIsOnline('websocket_'.$passport['id'])) return false;
         return true;
     }
 
