@@ -82,6 +82,7 @@ class Ws extends Controller
 
     public function onClose()
     {
+        $this->send('bye bye');
         $this->destroy();
     }
 

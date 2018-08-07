@@ -29,7 +29,7 @@ class BaseController extends Controller
     protected function initialization($controller_name, $method_name)
     {
         parent::initialization($controller_name, $method_name);
-        if ($this->request->header['x-real-ip']) $this->context['ip'] = $this->request->header['x-real-ip'];
+        if (isset($this->request->header['x-real-ip'])) $this->context['ip'] = $this->request->header['x-real-ip'];
         $this->setUp();
     }
 
