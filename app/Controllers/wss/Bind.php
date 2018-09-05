@@ -30,12 +30,11 @@ class Bind extends BaseController
     {
         $uid = $this->client_data->uid;
         $uid = 'websocket_'.$uid;
-        $this->bindUid($uid);
-        if ('websocket_5' == $uid) {
-            $this->send(['controller_name' => 'wss/Send','uid' => 'all' ,'content' => '所有用户的消息']);
+        if ($this->uid) {
+            $this->send('Error');
         } else {
+            $this->bindUid($uid);
             $this->send('bind successfully');
         }
-
     }
 }

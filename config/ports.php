@@ -31,9 +31,6 @@ $config['ports'][] = [
     'socket_name' => '0.0.0.0',
     'socket_port' => 8081,
     'route_tool' => 'N',
-	//'socket_ssl' => true,
-    'ssl_cert_file' => '/home/lee/sd/cert/214392470520546.crt',
-    'ssl_key_file' => '/home/lee/sd/cert/214392470520546.key',
     'middlewares' => ['MonitorMiddleware', 'NormalHttpMiddleware'],
     'method_prefix' => 'http_'
 ];
@@ -41,12 +38,9 @@ $config['ports'][] = [
     'socket_type' => PortManager::SOCK_WS,
     'socket_name' => '0.0.0.0',
     'socket_port' => 8083,
-	//'socket_ssl' => true,
-    'ssl_cert_file' => '/home/lee/sd/cert/214392470520546.crt',
-    'ssl_key_file' => '/home/lee/sd/cert/214392470520546.key',
-    'route_tool' => 'N',
-    'pack_tool' => 'Msgpack',
-    'opcode' => PortManager::WEBSOCKET_OPCODE_BINARY,
+    'route_tool' => 'NormalRoute',
+    'pack_tool' => 'NonJsonPack',
+    'opcode' => PortManager::WEBSOCKET_OPCODE_TEXT,
     'middlewares' => ['MonitorMiddleware', 'NormalHttpMiddleware']
 ];
 

@@ -56,6 +56,7 @@ class AppServer extends SwooleDistributedServer
         }
         if ($this->config->get('mysql.enable', true)) {
             $this->asynPools['mysqlPool'] = new MysqlAsynPool($this->config, $this->config->get('mysql.active'));
+            $this->addAsynPool('test',new MysqlAsynPool($this->config,'test'));
         }
         $this->redis_pool = $this->asynPools['redisPool'] ?? null;
         $this->mysql_pool = $this->asynPools['mysqlPool'] ?? null;
@@ -70,9 +71,21 @@ class AppServer extends SwooleDistributedServer
         $this->addAsynPool('alicdn',new HttpClientPool($this->config,'https://gosspublic.alicdn.com'));
         $this->addAsynPool('aliyuncs',new HttpClientPool($this->config,'https://sts.aliyuncs.com'));
         $this->addAsynPool('qq',new HttpClientPool($this->config,'https://ssl.captcha.qq.com'));
-        $this->addAsynPool('ws',new SdTcpRpcPool($this->config,'ws','127.0.0.1:8083'));
 
     }
+//	public function onSwooleWorkerStart($serv, $workerId)
+//	{
+//		parent::onSwooleWorkerStart($serv, $workerId);
+//		if($this->isTaskWorker()){
+//			$this->mongodb = new MongoClient();
+//			//连接
+//		}
+//	}
+//
+//	public function getMongoDb()
+//	{
+//		return $this->mongodb();
+//	}
 
     /**
      * 用户进程
@@ -90,7 +103,7 @@ class AppServer extends SwooleDistributedServer
      */
     public function onWebSocketHandCheck(HttpInput $httpInput)
     {
-        $tmp = $httpInput->get('_t');
+        //$tmp = $httpInput->get('_t');
 //        if (empty($tmp)) return false;
 //        $passport = decode_aes($tmp['encrypted'],$tmp['hash_key'],true);
 //        if (!isset($passport['id']) or $this->coroutineUidIsOnline('websocket_'.$passport['id'])) return false;

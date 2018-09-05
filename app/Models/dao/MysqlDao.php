@@ -26,6 +26,7 @@ class MysqlDao extends  Model
     public function initialization(&$context)
     {
         parent::initialization($context);
+        $this->db = $this->loader->mysql('test',$this);
     }
 
     public function createTable()
@@ -128,5 +129,17 @@ class MysqlDao extends  Model
         return $res;
 
     }
+	public function insert10()
+	{
+		for($i = 210000; $i <= 2000000; $i++) {
+			$params = [
+				'id' => $i,
+				'user_name' => substr(str_shuffle('abcdefghijklmnopqrstuvwxyz'),0,10),
+				'emails' => 'a@b.com',
+				'num' => mt_rand(1,100),
+				];
+			$this->db->insert($this->table)->set($params)->query();
+		}
+	}
 
 }

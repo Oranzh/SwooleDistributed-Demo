@@ -113,7 +113,7 @@ class N implements IRoute
     {
         //重定向到404
         $response->status(302);
-        $location = 'http://' . $request->header['host'] . "/" . '404';
+        $location = 'https://' . $request->header['host'] . "/" . '404';
         $response->header('Location', $location);
         $response->end('');
     }

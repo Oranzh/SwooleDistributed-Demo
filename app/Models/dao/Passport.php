@@ -10,7 +10,6 @@ namespace app\Models\dao;
 
 use Server\CoreBase\Model;
 use Server\Asyn\Mysql\Miner;
-use app\Exception\BlueWarningException;
 
 class Passport extends Model
 {
@@ -24,7 +23,6 @@ class Passport extends Model
     public function initialization(&$context)
     {
         parent::initialization($context);
-        //$this->db = $this->loader->mysql('wss',$this);
     }
 
     public function getFromName($name)
@@ -36,5 +34,39 @@ class Passport extends Model
             ->row();
         return $res;
     }
+
+    public function get($id)
+    {
+        $res = $this->db->select('*')
+            ->from($this->table)
+            ->where('id',$id)
+            ->query()
+            ->row();
+        return $res;
+    }
+
+    public function getList($pn,$rn)
+    {
+        $res = $this->db->select('*')
+            ->from($this->table)
+            ->where('status',0)
+            ->limit($rn,($pn-1)*$rn)
+            ->query()
+            ->result_array();
+        return $res;
+    }
+
+	public function insert10()
+	{
+		for($i = 50000; $i <= 100000; $i++) {
+			$params = [
+				'id' => $i,
+				'user_name' => substr(str_shuffle('abcdefghijklmnopqrstuvwxyz'),0,10),
+				'emails' => 'a@b.com',
+				'num' => mt_rand(1,100),
+				];
+			$this->db->insert($this->table)->set($params)->query();
+		}
+	}
 
 }

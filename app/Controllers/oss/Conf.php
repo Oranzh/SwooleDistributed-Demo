@@ -29,7 +29,8 @@ class Conf extends BaseController
     {
         $id = $this->ossConf['ak'];
         $key = $this->ossConf['sk'];
-        $host = sprintf('http://%s.%s',$this->ossConf['bucket'],$this->ossConf['url']);
+        $host = sprintf('%s://%s.%s',$this->ossConf['scheme'],$this->ossConf['bucket'],$this->ossConf['url']);
+        var_dump($host);
         //$host = 'http://mahuateng.oss-cn-beijing.aliyuncs.com';
         $callbackUrl = $this->ossConf['callback'];
         $callback_param = array('callbackUrl' => $callbackUrl,

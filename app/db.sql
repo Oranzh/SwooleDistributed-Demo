@@ -30,15 +30,30 @@ CREATE TABLE `passport` (
   UNIQUE KEY (`name`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COMMENT='用户表';
 
-
-CREATE TABLE `post` (
+CREATE TABLE `groups` (
   `id` int(6) NOT NULL AUTO_INCREMENT,
-  `user_id` char(20) NOT NULL DEFAULT '' COMMENT '用户id',
-  `content` VARCHAR (2048) NOT NULL DEFAULT '' COMMENT '内容',
-  `type` tinyint(1) NOT NULL DEFAULT 0 COMMENT '0:货找车 1:车找货',
-  `status` tinyint(1) NOT NULL,
+  `name` VARCHAR (60)  COMMENT 'name',
+  `leader` int(6) NOT NULL  COMMENT 'leader',
+  `status` tinyint(1) NOT NULL DEFAULT 0 ,
   `create_time` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
+  `update_time` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY (`name`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COMMENT='群组';
+
+CREATE TABLE `group_passport` (
+  `id` int(6) NOT NULL AUTO_INCREMENT,
+  `group_id` int(6) NOT NULL COMMENT '群组',
+  `passport` int(6) NOT NULL  COMMENT '用户',
+  `status` tinyint(1) NOT NULL DEFAULT 0 ,
+  `create_time` int(11) NOT NULL,
+  `update_time` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COMMENT='群用户';
+
+'select a.* ,b.name as group_name,b.leader from group_passport a, groups b  where a.passport = 5 and a.group_id = b.id '
+
+
+
 
 

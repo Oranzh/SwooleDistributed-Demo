@@ -82,17 +82,18 @@ class Ws extends Controller
 
     public function onClose()
     {
-        $this->send('bye bye');
         $this->destroy();
     }
 
     public function onConnect()
     {
         get_instance()->protect($this->fd);
-        $msg = [
-            'controller_name' => 'wss/Bind',
-            'uid' => '5'
-        ];
+        //$msg = '欢迎使用,可以开始聊天了!';
+		$msg = [
+			'controller_name' => 'wss/Bind',
+			'method_name' => 'perform',
+			'uid' => 'sd_123'
+			];
         $this->send($msg);
 
     }

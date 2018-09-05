@@ -103,4 +103,6 @@ class MysqlService extends Model
         $this->redis->hSet($this->redis_table,$id,json_encode($res));
         return $res;
     }
+
+
 }

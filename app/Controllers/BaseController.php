@@ -20,7 +20,6 @@ use Respect\Validation\Exceptions\ExceptionInterface;
 
 class BaseController extends Controller
 {
-    private $hookNeedLogin = false;
     public function __construct($proxy = ChildProxy::class)
     {
         parent::__construct($proxy);
@@ -33,19 +32,29 @@ class BaseController extends Controller
         $this->setUp();
     }
 
-    public function setUp()
+    protected function setUp()
     {
     }
 
-    public function needLogin()
+    protected function needLogin()
     {
+        $key = $this->config['cookie']['key'] ?? 'IDON#$DT@#$KONWTHEKEY#';
         if ($tmp = $this->http_input->getPost('_t')) {
-            $sess = decode_aes($tmp['encrypted'],$tmp['hash_key'],true);
+            $sess = decrypt_openssl($tmp,$key,true);
+            if (empty($sess)) throw new BlueWarningException('需要登录');
             if ($sess['time'] + $sess['expire'] < time()) throw new BlueWarningException('需要登录');
             $this->context['sess'] = $sess;
+            return $sess;
         } else {
             throw new BlueWarningException('需要登录');
         }
+    }
+
+    protected function input()
+    {
+        $input = $this->http_input->getAllPostGet();
+        unset($input['_t']);
+        return $input;
     }
 
     /**

@@ -28,10 +28,7 @@ class Taop extends BaseController
 
     public function http_perform()
     {
-//        $data = $this->ws->helpToBuildSDControllerQuest($this->context, 'wss/OnConnect', 'perform');
-//        $result = $this->ws->coroutineSend($data);
-        $uid = 123;
-        $this->bindUid($uid);
+
 
         $this->http_output->end('ok');
     }

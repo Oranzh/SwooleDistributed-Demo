@@ -39,6 +39,8 @@ class Register extends BaseController
     private function verify()
     {
         $params = $this->http_input->getAllPost();
+		var_dump('paramas');
+		var_dump($params);
         v::arrayVal()->key('name', v::stringType()->length(3, 20))
             ->key('password', v::stringType()->length(6, 30))
             ->check($params);

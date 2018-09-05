@@ -34,6 +34,30 @@ function decode_aes($data,$key,$serialize = false,$method = 'aes-256-cbc') {
     return $decrypted;
 }
 
+function encrypt_openssl($msg, $key,$serialize = false, $iv = null) {
+    if ($serialize) {
+        $msg = serialize($msg);
+    }
+    if (!$iv) {
+        $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length('AES-128-CBC'));
+    }
+    $encryptedMessage = openssl_encrypt($msg, 'AES-128-CBC', $key, OPENSSL_RAW_DATA, $iv);
+    return base64_encode($iv . $encryptedMessage);
+}
+function decrypt_openssl($payload, $key,$serialize = false) {
+
+    $raw = base64_decode($payload);
+    $iv = substr($raw, 0, 16);
+    $data = substr($raw, 16);
+    $res = openssl_decrypt($data, 'AES-128-CBC', $key, OPENSSL_RAW_DATA, $iv);
+    if ($serialize) {
+        $res = unserialize($res);
+    }
+    return $res;
+}
+
+
+
 
 
 

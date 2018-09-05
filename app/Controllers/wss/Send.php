@@ -32,7 +32,24 @@ class Send extends Controller
         $content = $this->client_data->content;
         if ($this->client_data->uid == 'all') {
             $this->sendToAll($content);
+        } elseif($this->client_data->to == 'two'){//给1个人以上发消息
+            $uid = explode(',',$uid);
+            $uid = array_map(function ($v){
+                return 'websocket_'.$v;
+            },$uid);
+            $this->sendToUids($uid,$content);
+        } else {
+            $data = [
+                'from' => $this->uid,
+                'to' => $uid,
+                'message' => $content,
+                'time' => time(),
+            ];
+            $tmp = [$this->uid,$uid];
+            sort($tmp);
+            $key = implode('-',$tmp);
+            $this->redis->sAdd($key,json_encode($data));
+            $this->sendToUid($uid,$content);
         }
-        $this->sendToUid($uid,$content);
     }
 }

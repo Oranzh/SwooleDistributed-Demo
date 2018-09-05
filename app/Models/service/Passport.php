@@ -16,7 +16,7 @@ use Server\CoreBase\Model;
 class Passport extends Model
 {
     private $dPassport;
-    private $pub_key = 'JKLFD34jklfdsiJKDLFS';
+    private $key = 'JKLFD34jklfdsiJKDLFS';
 
     public function __construct($proxy = ChildProxy::class)
     {
@@ -36,6 +36,7 @@ class Passport extends Model
 
     public function login($name,$password)
     {
+        $key = $this->config['cookie']['key'];
         $tmp = $this->getFromName($name);
         if (!password_verify($password,$tmp['password'])) throw new BlueWarningException('用户信息无效');
         $token = [
@@ -44,7 +45,8 @@ class Passport extends Model
             'expire' => 10 * 86400,
             'time' => time(),
         ];
-        $token = encode_aes($token,$this->pub_key,true);
+        //$token = encode_aes($token,$this->pub_key,true);
+        $token = encrypt_openssl($token,$key,true);
         return [
             'token' => $token,
             'user' => [
@@ -52,5 +54,11 @@ class Passport extends Model
                 'name' => $tmp['name'],
             ],
         ];
+    }
+
+    public function getList($pn,$rn = 5)
+    {
+        $res = $this->dPassport->getList($pn,$rn);
+        return $res ?? [];
     }
 }
