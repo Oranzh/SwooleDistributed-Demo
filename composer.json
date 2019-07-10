@@ -1,0 +1,8 @@
+{
+    "name": "oranzh/oranzh",
+    "description": "A short description of what your package does",
+    "type": "project",
+    "license": "MIT",
+    "minimum-stability": "stable",
+    "require": {"smarty/smarty":"3.1.*"}
+}
